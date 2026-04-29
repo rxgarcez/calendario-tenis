@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendário de Torneios — Federação Paulista de Tênis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ===== CONFIGURAÇÃO ===== */
+  /*
+    INSTRUÇÕES DE USO:
+    1. Na sua planilha do Google Sheets, crie colunas:
+       Torneio | Data | Local | Categoria | Status | Link
+    2. Vá em Arquivo → Compartilhar → Publicar na web
+    3. Escolha a aba e formato CSV
+    4. Cole o link na variável SHEET_URL abaixo
+    5. Hospede este arquivo no GitHub Pages
+  */
+
+  :root {
+    --clay: #C4622D;
+    --clay-light: #F0D5C5;
+    --clay-dark: #8B3E18;
+    --court: #1A3A2A;
+    --court-light: #2D5C3F;
+    --net: #E8E0D5;
+    --white: #FAFAF8;
+    --ink: #1A1410;
+    --muted: #7A6E65;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: var(--court);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 220px; height: 220px;
+    border: 40px solid rgba(196,98,45,0.2);
+    border-radius: 50%;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 20%;
+    width: 120px; height: 120px;
+    border: 25px solid rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--clay);
+    background: rgba(196,98,45,0.15);
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 1rem;
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  header h1 em {
+    color: var(--clay);
+    font-style: italic;
+  }
+
+  header p {
+    color: rgba(255,255,255,0.55);
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .header-meta {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .meta-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .meta-chip .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--clay);
+    flex-shrink: 0;
+  }
+
+  /* ===== FILTROS ===== */
+  .filters-wrap {
+    background: var(--net);
+    border-bottom: 1px solid #D8D0C8;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .filters {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-right: 0.25rem;
+  }
+
+  .filter-btn {
+    background: none;
+    border: 1px solid #C8C0B8;
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--clay);
+    color: var(--clay-dark);
+  }
+
+  .filter-btn.active {
+    background: var(--clay);
+    border-color: var(--clay);
+    color: white;
+  }
+
+  .search-wrap {
+    margin-left: auto;
+    position: relative;
+  }
+
+  .search-wrap input {
+    border: 1px solid #C8C0B8;
+    border-radius: 100px;
+    padding: 6px 14px 6px 34px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    background: white;
+    color: var(--ink);
+    outline: none;
+    width: 200px;
+    transition: border-color 0.15s;
+  }
+
+  .search-wrap input:focus { border-color: var(--clay); }
+
+  .search-wrap::before {
+    content: '⌕';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  /* ===== CONTEÚDO ===== */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* ===== LOADING ===== */
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 2rem;
+    gap: 1rem;
+    color: var(--muted);
+  }
+
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--clay-light);
+    border-top-color: var(--clay);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== ERRO ===== */
+  .error-box {
+    background: #FEF3EE;
+    border: 1px solid var(--clay-light);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    margin: 2rem 0;
+  }
+
+  .error-box h3 { color: var(--clay-dark); margin-bottom: 0.5rem; }
+  .error-box p { color: var(--muted); font-size: 14px; }
+  .error-box code { background: var(--clay-light); padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+
+  /* ===== MESES ===== */
+  .month-group { margin-bottom: 2.5rem; }
+
+  .month-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--net);
+  }
+
+  .month-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--court);
+  }
+
+  .month-count {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  /* ===== CARDS ===== */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid #E8E2DC;
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    animation: fadeUp 0.3s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26,58,42,0.08);
+    border-color: #C8C0B8;
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .card-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--court);
+    color: white;
+    border-radius: 8px;
+    padding: 6px 10px;
+    min-width: 46px;
+    flex-shrink: 0;
+  }
+
+  .card-date .day {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+
+  .card-date .month-abbr {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .card-status {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 100px;
+  }
+
+  .status-aberto { background: #E5F4EB; color: #1A6A35; }
+  .status-confirmado { background: #E8F1FE; color: #1A4A8A; }
+  .status-encerrado { background: #F0EDEA; color: #7A6E65; }
+  .status-cancelado { background: #FEE9E9; color: #8A2020; }
+  .status-default { background: #F0EDEA; color: #7A6E65; }
+
+  .card-title {
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  .card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .card-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .card-meta-item .icon {
+    font-size: 13px;
+    width: 16px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .card-category {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--clay-dark);
+    background: var(--clay-light);
+    padding: 2px 8px;
+    border-radius: 100px;
+    align-self: flex-start;
+  }
+
+  .card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--court-light);
+    text-decoration: none;
+    padding: 4px 0;
+    border-top: 1px solid var(--net);
+    margin-top: auto;
+    transition: color 0.15s;
+  }
+
+  .card-link:hover { color: var(--clay); }
+
+  /* ===== VAZIO ===== */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+  }
+
+  .empty-state h3 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--court); margin-bottom: 0.5rem; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--net);
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2rem;
+  }
+
+  footer a { color: var(--clay-dark); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ===== COUNTER ===== */
+  .results-count {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    main, .filters { padding: 1.25rem; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .search-wrap { margin-left: 0; width: 100%; }
+    .search-wrap input { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="header-tag">Federação Paulista de Tênis</span>
+    <h1>Calendário de <em>Torneios</em> 2025</h1>
+    <p>Acompanhe todos os eventos oficiais do tênis paulista</p>
+    <div class="header-meta">
+      <span class="meta-chip"><span class="dot"></span> Atualizado em tempo real</span>
+      <span class="meta-chip"><span class="dot"></span> São Paulo</span>
+    </div>
+  </div>
+</header>
+
+<div class="filters-wrap">
+  <div class="filters">
+    <span class="filter-label">Filtrar:</span>
+    <button class="filter-btn active" data-filter="todos">Todos</button>
+    <button class="filter-btn" data-filter="aberto">Inscrições abertas</button>
+    <button class="filter-btn" data-filter="confirmado">Confirmado</button>
+    <button class="filter-btn" data-filter="encerrado">Encerrado</button>
+    <div class="search-wrap">
+      <input type="text" id="search" placeholder="Buscar torneio..." autocomplete="off">
+    </div>
+  </div>
+</div>
+
+<main>
+  <div id="app">
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>Carregando calendário...</span>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>Dados atualizados automaticamente via Google Sheets &nbsp;·&nbsp; <a href="https://www.fptenis.com.br" target="_blank">fptenis.com.br</a></p>
+</footer>
+
+<script>
+  /* ====================================================
+     CONFIGURAÇÃO — edite apenas esta seção
+     ==================================================== */
+  const CONFIG = {
+    // Cole aqui o link CSV da sua planilha publicada
+    // Exemplo: https://docs.google.com/spreadsheets/d/SEU_ID/gviz/tq?tqx=out:csv
+    SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3pfKYoo6E_DCks1OJ23iIQ97W0ssUuChvaVxhdkzhyRlfNkZu9TO0lr1UPOd56TSLXZhx2ZfZHMqC/pub?output=csv',
+
+    // Colunas esperadas na planilha (exatamente como estão no cabeçalho)
+    COLS: {
+      torneio:   'Torneio',
+      data:      'Data',
+      local:     'Local',
+      categoria: 'Categoria',
+      status:    'Status',
+      link:      'Link'
+    },
+
+    // Atualiza a cada quantos minutos? (0 = desativado)
+    AUTO_REFRESH_MINUTES: 15
+  };
+  /* ==================================================== */
+
+  const MONTH_NAMES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const MONTH_ABBR  = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+
+  let allEvents = [];
+  let activeFilter = 'todos';
+  let searchTerm = '';
+
+  function parseCSV(text) {
+    const lines = text.trim().split('\n');
+    if (lines.length < 2) return [];
+    const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g,'').trim());
+    return lines.slice(1).map(line => {
+      const vals = [];
+      let cur = '', inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        if (line[i] === '"') { inQ = !inQ; continue; }
+        if (line[i] === ',' && !inQ) { vals.push(cur.trim()); cur = ''; continue; }
+        cur += line[i];
+      }
+      vals.push(cur.trim());
+      const obj = {};
+      headers.forEach((h, i) => obj[h] = vals[i] || '');
+      return obj;
+    }).filter(r => r[CONFIG.COLS.torneio]);
+  }
+
+  function parseDate(str) {
+    if (!str) return null;
+    // Suporta dd/mm/yyyy, dd-mm-yyyy, yyyy-mm-dd
+    let m;
+    if ((m = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/))) {
+      return new Date(+m[3], +m[2]-1, +m[1]);
+    }
+    if ((m = str.match(/^(\d{4})[\/\-](\d{2})[\/\-](\d{2})$/))) {
+      return new Date(+m[1], +m[2]-1, +m[3]);
+    }
+    const d = new Date(str);
+    return isNaN(d) ? null : d;
+  }
+
+  function getStatusClass(status) {
+    const s = (status || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
+    if (s.includes('aberto') || s.includes('inscricao')) return 'status-aberto';
+    if (s.includes('confirm')) return 'status-confirmado';
+    if (s.includes('encerr')) return 'status-encerrado';
+    if (s.includes('cancel')) return 'status-cancelado';
+    return 'status-default';
+  }
+
+  function renderCard(ev) {
+    const d = parseDate(ev[CONFIG.COLS.data]);
+    const dayNum = d ? d.getDate() : '—';
+    const monAbbr = d ? MONTH_ABBR[d.getMonth()] : '';
+    const status = ev[CONFIG.COLS.status] || '';
+    const link = ev[CONFIG.COLS.link] || '';
+
+    return `
+      <div class="card">
+        <div class="card-top">
+          <div class="card-date">
+            <span class="day">${dayNum}</span>
+            <span class="month-abbr">${monAbbr}</span>
+          </div>
+          ${status ? `<span class="card-status ${getStatusClass(status)}">${status}</span>` : ''}
+        </div>
+        <div class="card-title">${ev[CONFIG.COLS.torneio]}</div>
+        <div class="card-meta">
+          ${ev[CONFIG.COLS.local] ? `<div class="card-meta-item"><span class="icon">📍</span>${ev[CONFIG.COLS.local]}</div>` : ''}
+          ${ev[CONFIG.COLS.data]  ? `<div class="card-meta-item"><span class="icon">📅</span>${ev[CONFIG.COLS.data]}</div>` : ''}
+        </div>
+        ${ev[CONFIG.COLS.categoria] ? `<span class="card-category">${ev[CONFIG.COLS.categoria]}</span>` : ''}
+        ${link ? `<a class="card-link" href="${link}" target="_blank" rel="noopener">Ver detalhes →</a>` : ''}
+      </div>
+    `;
+  }
+
+  function renderEvents(events) {
+    const app = document.getElementById('app');
+    if (!events.length) {
+      app.innerHTML = `<div class="empty-state"><h3>Nenhum torneio encontrado</h3><p>Tente outro filtro ou busca.</p></div>`;
+      return;
+    }
+
+    // Agrupar por mês
+    const groups = {};
+    events.forEach(ev => {
+      const d = parseDate(ev[CONFIG.COLS.data]);
+      const key = d ? `${d.getFullYear()}-${String(d.getMonth()).padStart(2,'0')}` : 'sem-data';
+      const label = d ? `${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}` : 'Sem data';
+      if (!groups[key]) groups[key] = { label, events: [] };
+      groups[key].events.push(ev);
+    });
+
+    const sorted = Object.entries(groups).sort(([a],[b]) => a.localeCompare(b));
+    const total = events.length;
+
+    let html = `<p class="results-count">${total} torneio${total !== 1 ? 's' : ''} encontrado${total !== 1 ? 's' : ''}</p>`;
+
+    sorted.forEach(([, g]) => {
+      html += `
+        <div class="month-group">
+          <div class="month-header">
+            <span class="month-name">${g.label}</span>
+            <span class="month-count">${g.events.length} evento${g.events.length !== 1 ? 's' : ''}</span>
+          </div>
+          <div class="cards-grid">
+            ${g.events.map(renderCard).join('')}
+          </div>
+        </div>
+      `;
+    });
+
+    app.innerHTML = html;
+  }
+
+  function applyFilters() {
+    let filtered = [...allEvents];
+    if (activeFilter !== 'todos') {
+      filtered = filtered.filter(ev => {
+        const s = (ev[CONFIG.COLS.status] || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
+        return s.includes(activeFilter);
+      });
+    }
+    if (searchTerm) {
+      const q = searchTerm.toLowerCase();
+      filtered = filtered.filter(ev =>
+        Object.values(ev).some(v => v.toLowerCase().includes(q))
+      );
+    }
+    renderEvents(filtered);
+  }
+
+  async function loadData() {
+    const app = document.getElementById('app');
+
+    if (!CONFIG.SHEET_URL || CONFIG.SHEET_URL.includes('COLE_AQUI')) {
+      app.innerHTML = `
+        <div class="error-box">
+          <h3>Configure o link da planilha</h3>
+          <p>Abra o arquivo <code>index.html</code>, localize a variável <code>SHEET_URL</code> e cole o link CSV da sua planilha do Google Sheets.</p>
+          <p style="margin-top:0.75rem">Siga os passos: <strong>Arquivo → Compartilhar → Publicar na web → CSV</strong></p>
+        </div>`;
+      return;
+    }
+
+    if (location.protocol === 'file:') {
+      app.innerHTML = `
+        <div class="error-box">
+          <h3>Abra pelo servidor, não pelo arquivo</h3>
+          <p>Você está abrindo o arquivo direto pelo computador (<code>file://</code>). O navegador bloqueia requisições externas nesse modo — isso é normal.</p>
+          <p style="margin-top:0.75rem"><strong>Solução mais fácil:</strong> suba o arquivo para o GitHub Pages e acesse pela URL pública. Lá vai funcionar perfeitamente.</p>
+          <p style="margin-top:0.5rem"><strong>Para testar localmente:</strong> instale a extensão <a href="https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer" target="_blank">Live Server</a> no VS Code e clique em "Go Live".</p>
+        </div>`;
+      return;
+    }
+
+    try {
+      app.innerHTML = `<div class="loading"><div class="spinner"></div><span>Carregando calendário...</span></div>`;
+      const res = await fetch(CONFIG.SHEET_URL, { mode: 'cors' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      allEvents = parseCSV(text);
+      if (allEvents.length === 0) {
+        app.innerHTML = `<div class="error-box"><h3>Planilha vazia ou colunas não reconhecidas</h3><p>Verifique se a primeira linha tem exatamente: <code>Torneio, Data, Local, Categoria, Status, Link</code></p></div>`;
+        return;
+      }
+      applyFilters();
+    } catch (err) {
+      app.innerHTML = `
+        <div class="error-box">
+          <h3>Não foi possível carregar os dados</h3>
+          <p>Verifique se o link da planilha está correto e se ela está publicada publicamente.</p>
+          <p style="margin-top:0.5rem;font-size:12px;color:#999">${err.message}</p>
+        </div>`;
+    }
+  }
+
+  // Filtros
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      applyFilters();
+    });
+  });
+
+  // Busca
+  document.getElementById('search').addEventListener('input', e => {
+    searchTerm = e.target.value;
+    applyFilters();
+  });
+
+  // Carregar dados
+  loadData();
+
+  // Auto-refresh
+  if (CONFIG.AUTO_REFRESH_MINUTES > 0) {
+    setInterval(loadData, CONFIG.AUTO_REFRESH_MINUTES * 60 * 1000);
+  }
+</script>
+</body>
+</html>
