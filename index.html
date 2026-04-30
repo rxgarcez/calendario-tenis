@@ -423,6 +423,14 @@
     animation: fadeUp 0.3s ease both;
   }
 
+  .card.card-expired {
+    opacity: 0.6;
+  }
+
+  .card.card-expired:hover {
+    opacity: 0.8;
+  }
+
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
@@ -767,7 +775,7 @@
 <script>
   const CONFIG = {
     SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3pfKYoo6E_DCks1OJ23iIQ97W0ssUuChvaVxhdkzhyRlfNkZu9TO0lr1UPOd56TSLXZhx2ZfZHMqC/pub?output=csv',
-    COLS: { torneio: 'Torneio', data: 'Data', local: 'Local', categoria: 'Categoria', status: 'Status', link: 'Link' },
+    COLS: { torneio: 'Torneio', dataInicio: 'Data Início', dataFim: 'Data Fim', local: 'Local', categoria: 'Categoria', status: 'Status', link: 'Link' },
     AUTO_REFRESH_MINUTES: 15
   };
 
@@ -808,31 +816,66 @@
     const d = new Date(str); return isNaN(d) ? null : d;
   }
 
+  function isExpired(dataFimStr) {
+    const d = parseDate(dataFimStr);
+    if (!d) return false;
+    // Compare dates at day level (ignore time)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    d.setHours(0, 0, 0, 0);
+    return d < today;
+  }
+
   function getStatusClass(status) {
     const s = (status || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
-    if (s.includes('aberto') || s.includes('inscricao')) return 'status-aberto';
-    if (s.includes('confirm')) return 'status-confirmado';
     if (s.includes('encerr')) return 'status-encerrado';
     if (s.includes('cancel')) return 'status-cancelado';
+    if (s.includes('aberto') || s.includes('inscricao')) return 'status-aberto';
+    if (s.includes('confirm')) return 'status-confirmado';
     return 'status-default';
   }
 
+  function formatDateRange(startStr, endStr) {
+    const s = parseDate(startStr);
+    const e = parseDate(endStr);
+    if (!s) return startStr || '';
+    const sd = s.getDate();
+    const sm = MONTH_ABBR[s.getMonth()];
+    if (!e) return `${sd} ${sm}`;
+    const ed = e.getDate();
+    const em = MONTH_ABBR[e.getMonth()];
+    const ey = e.getFullYear();
+    if (s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear()) {
+      return `${sd} – ${ed} ${em} ${ey}`;
+    }
+    return `${sd} ${sm} – ${ed} ${em} ${ey}`;
+  }
+
   function renderCard(ev) {
-    const d = parseDate(ev[CONFIG.COLS.data]);
-    const dayNum = d ? d.getDate() : '—';
+    const dataInicio = ev[CONFIG.COLS.dataInicio] || ev['Data'] || '';
+    const dataFim    = ev[CONFIG.COLS.dataFim] || '';
+    const d = parseDate(dataInicio);
+    const dayNum  = d ? d.getDate() : '—';
     const monAbbr = d ? MONTH_ABBR[d.getMonth()] : '';
-    const status = ev[CONFIG.COLS.status] || '';
+
+    // Auto-encerrado se data fim já passou
+    const expired = isExpired(dataFim);
+    let status = expired ? 'Encerrado' : (ev[CONFIG.COLS.status] || '');
+    const statusClass = getStatusClass(status);
+
     const link = ev[CONFIG.COLS.link] || '';
+    const dateRange = formatDateRange(dataInicio, dataFim);
+
     return `
-      <div class="card">
+      <div class="card${expired ? ' card-expired' : ''}">
         <div class="card-top">
           <div class="card-date"><span class="day">${dayNum}</span><span class="month-abbr">${monAbbr}</span></div>
-          ${status ? `<span class="card-status ${getStatusClass(status)}">${status}</span>` : ''}
+          ${status ? `<span class="card-status ${statusClass}">${status}</span>` : ''}
         </div>
         <div class="card-title">${ev[CONFIG.COLS.torneio]}</div>
         <div class="card-meta">
-          ${ev[CONFIG.COLS.local] ? `<div class="card-meta-item"><span class="icon">📍</span>${ev[CONFIG.COLS.local]}</div>` : ''}
-          ${ev[CONFIG.COLS.data]  ? `<div class="card-meta-item"><span class="icon">📅</span>${ev[CONFIG.COLS.data]}</div>` : ''}
+          ${ev[CONFIG.COLS.local]    ? `<div class="card-meta-item"><span class="icon">📍</span>${ev[CONFIG.COLS.local]}</div>` : ''}
+          ${dateRange                ? `<div class="card-meta-item"><span class="icon">📅</span>${dateRange}</div>` : ''}
         </div>
         ${ev[CONFIG.COLS.categoria] ? `<span class="card-category">${ev[CONFIG.COLS.categoria]}</span>` : ''}
         ${link ? `<a class="card-link" href="${link}" target="_blank" rel="noopener">Ver detalhes →</a>` : ''}
@@ -847,7 +890,8 @@
     }
     const groups = {};
     events.forEach(ev => {
-      const d = parseDate(ev[CONFIG.COLS.data]);
+      const dataInicio = ev[CONFIG.COLS.dataInicio] || ev['Data'] || '';
+      const d = parseDate(dataInicio);
       const key = d ? `${d.getFullYear()}-${String(d.getMonth()).padStart(2,'0')}` : 'sem-data';
       const label = d ? `${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}` : 'Sem data';
       if (!groups[key]) groups[key] = { label, events: [] };
@@ -866,8 +910,11 @@
     let filtered = [...allEvents];
     if (activeFilter !== 'todos') {
       filtered = filtered.filter(ev => {
-        const s = (ev[CONFIG.COLS.status] || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
-        return s.includes(activeFilter);
+        const dataFim = ev[CONFIG.COLS.dataFim] || '';
+        const effectiveStatus = isExpired(dataFim)
+          ? 'encerrado'
+          : (ev[CONFIG.COLS.status] || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
+        return effectiveStatus.includes(activeFilter);
       });
     }
     if (searchTerm) {
@@ -890,7 +937,7 @@
       const text = await res.text();
       allEvents = parseCSV(text);
       if (allEvents.length === 0) {
-        app.innerHTML = '<div class="error-box"><h3>Planilha vazia ou colunas não reconhecidas</h3><p>Verifique se a primeira linha tem: <code>Torneio, Data, Local, Categoria, Status, Link</code></p></div>';
+        app.innerHTML = '<div class="error-box"><h3>Planilha vazia ou colunas não reconhecidas</h3><p>Verifique se a primeira linha tem: <code>Torneio, Data Início, Data Fim, Local, Categoria, Status, Link</code></p></div>';
         return;
       }
       applyFilters();
