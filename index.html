@@ -20,6 +20,10 @@
     --ink: #0d1b2a;
     --muted: #5a6a7a;
     --border: #d6e3ee;
+    /* Beach Tennis accent */
+    --bt-accent: #fd742f;
+    --bt-accent-light: #fff0e8;
+    --bt-accent-dark: #c4511a;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -245,6 +249,106 @@
   @keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(5px); }
+  }
+
+  /* ===== SPA SECTION TABS ===== */
+  .section-tabs {
+    background: var(--primary);
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .section-tab {
+    flex: 0 0 auto;
+    padding: 0 2.5rem;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .section-tab:hover {
+    color: rgba(255,255,255,0.85);
+  }
+
+  .section-tab.active {
+    color: white;
+    border-bottom-color: var(--tertiary);
+  }
+
+  .section-tab.bt-tab.active {
+    border-bottom-color: var(--bt-accent);
+  }
+
+  .tab-icon {
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  /* ===== SECTION VIEWS ===== */
+  .section-view { display: none; }
+  .section-view.active { display: block; }
+
+  /* ===== BEACH TENNIS THEMING ===== */
+  /* When beach tennis is active, accent color switches to orange */
+  .bt-active .filter-btn.active {
+    background: var(--bt-accent);
+    border-color: var(--bt-accent);
+  }
+
+  .bt-active .filter-btn:hover {
+    border-color: var(--bt-accent);
+    color: var(--bt-accent);
+  }
+
+  .bt-active .search-wrap input:focus {
+    border-color: var(--bt-accent);
+  }
+
+  .bt-active .card-date {
+    background: var(--bt-accent);
+  }
+
+  .bt-active .month-name {
+    color: var(--bt-accent-dark);
+  }
+
+  .bt-active .card-category {
+    color: var(--bt-accent-dark);
+    background: var(--bt-accent-light);
+  }
+
+  .bt-active .card-link {
+    color: var(--bt-accent-dark);
+  }
+
+  .bt-active .card-link:hover {
+    color: var(--bt-accent);
+  }
+
+  .bt-active .spinner {
+    border-top-color: var(--bt-accent);
+  }
+
+  /* ===== HERO BADGE — beach tennis variant ===== */
+  .hero-tag.bt {
+    background: rgba(253,116,47,0.85);
   }
 
   /* ===== FILTROS ===== */
@@ -737,7 +841,7 @@
   <div class="hero-content">
     <span class="hero-tag">Federação Paulista de Tênis</span>
     <h1>Calendário<br><em>Oficial</em> 2026</h1>
-    <p class="hero-sub">Todos os torneios oficiais do tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.</p>
+    <p class="hero-sub" id="hero-sub">Todos os torneios oficiais do tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.</p>
     <a href="#calendario" class="hero-scroll">
       <span class="scroll-arrow">↓</span>
       Ver torneios
@@ -745,51 +849,152 @@
   </div>
 </section>
 
-<!-- FILTROS -->
-<div class="filters-wrap" id="calendario">
-  <div class="filters">
-    <span class="filter-label">Filtrar:</span>
-    <button class="filter-btn active" data-filter="todos">Todos</button>
-    <button class="filter-btn" data-filter="aberto">Inscrições abertas</button>
-    <button class="filter-btn" data-filter="confirmado">Confirmado</button>
-    <button class="filter-btn" data-filter="encerrado">Encerrado</button>
-    <div class="search-wrap">
-      <input type="text" id="search" placeholder="Buscar torneio..." autocomplete="off">
-    </div>
-  </div>
+<!-- SECTION TABS -->
+<div class="section-tabs" id="calendario">
+  <button class="section-tab active" data-section="tenis" id="tab-tenis">
+    <span class="tab-icon">🎾</span> Tênis
+  </button>
+  <button class="section-tab bt-tab" data-section="beach" id="tab-beach">
+    <span class="tab-icon">🏖️</span> Beach Tennis
+  </button>
 </div>
 
-<main>
-  <div id="app">
-    <div class="loading">
-      <div class="spinner"></div>
-      <span>Carregando calendário...</span>
+<!-- TÊNIS SECTION -->
+<div class="section-view active" id="view-tenis">
+  <div class="filters-wrap">
+    <div class="filters">
+      <span class="filter-label">Filtrar:</span>
+      <button class="filter-btn active" data-filter="todos" data-sport="tenis">Todos</button>
+      <button class="filter-btn" data-filter="aberto" data-sport="tenis">Inscrições abertas</button>
+      <button class="filter-btn" data-filter="confirmado" data-sport="tenis">Confirmado</button>
+      <button class="filter-btn" data-filter="encerrado" data-sport="tenis">Encerrado</button>
+      <div class="search-wrap">
+        <input type="text" id="search-tenis" placeholder="Buscar torneio..." autocomplete="off">
+      </div>
     </div>
   </div>
-</main>
+  <main>
+    <div id="app-tenis">
+      <div class="loading"><div class="spinner"></div><span>Carregando calendário...</span></div>
+    </div>
+  </main>
+</div>
+
+<!-- BEACH TENNIS SECTION -->
+<div class="section-view" id="view-beach">
+  <div class="filters-wrap">
+    <div class="filters">
+      <span class="filter-label">Filtrar:</span>
+      <button class="filter-btn active" data-filter="todos" data-sport="beach">Todos</button>
+      <button class="filter-btn" data-filter="aberto" data-sport="beach">Inscrições abertas</button>
+      <button class="filter-btn" data-filter="confirmado" data-sport="beach">Confirmado</button>
+      <button class="filter-btn" data-filter="encerrado" data-sport="beach">Encerrado</button>
+      <div class="search-wrap">
+        <input type="text" id="search-beach" placeholder="Buscar torneio..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+  <main>
+    <div id="app-beach">
+      <div class="loading"><div class="spinner"></div><span>Carregando calendário...</span></div>
+    </div>
+  </main>
+</div>
 
 <footer>
   <p>Dados atualizados automaticamente via Google Sheets &nbsp;·&nbsp; <a href="https://www.fptenis.com.br" target="_blank">fptenis.com.br</a></p>
 </footer>
 
 <script>
+  /* ===== CONFIG ===== */
   const CONFIG = {
-    SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3pfKYoo6E_DCks1OJ23iIQ97W0ssUuChvaVxhdkzhyRlfNkZu9TO0lr1UPOd56TSLXZhx2ZfZHMqC/pub?output=csv',
-    COLS: { torneio: 'Torneio', dataInicio: 'Data Início', dataFim: 'Data Fim', local: 'Local', categoria: 'Categoria', status: 'Status', link: 'Link' },
-    AUTO_REFRESH_MINUTES: 15
+    tenis: {
+      SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3pfKYoo6E_DCks1OJ23iIQ97W0ssUuChvaVxhdkzhyRlfNkZu9TO0lr1UPOd56TSLXZhx2ZfZHMqC/pub?output=csv',
+      heroTag: 'Federação Paulista de Tênis',
+      heroTitle: 'Calendário<br><em>Oficial</em> 2026',
+      heroSub: 'Todos os torneios oficiais do tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.',
+      appId: 'app-tenis',
+      sport: 'tenis'
+    },
+    beach: {
+      SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTQPQho41Fa8c6Sm7TXiwaCjBTTB1XqCIoMc5KKE8G-U2o6bQjKJMUkStNsZqQW6zR4qVagSuFa3XOY/pub?output=csv',
+      heroTag: 'Beach Tennis — FPT',
+      heroTitle: 'Calendário<br><em>Oficial</em> 2026',
+      heroSub: 'Todos os torneios oficiais do beach tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.',
+      appId: 'app-beach',
+      sport: 'beach'
+    }
   };
+
+  const COLS = { torneio: 'Torneio', dataInicio: 'Data Início', dataFim: 'Data Fim', local: 'Local', categoria: 'Categoria', status: 'Status', link: 'Link' };
+  const AUTO_REFRESH_MINUTES = 15;
 
   const MONTH_NAMES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   const MONTH_ABBR  = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
 
-  let allEvents = [], activeFilter = 'todos', searchTerm = '';
+  // State per sport
+  const state = {
+    tenis: { events: [], filter: 'todos', search: '' },
+    beach: { events: [], filter: 'todos', search: '' }
+  };
 
-  // Navbar scroll behavior
+  let activeSport = 'tenis';
+
+  /* ===== NAVBAR SCROLL ===== */
   const navbar = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', window.scrollY > 60);
   });
 
+  /* ===== SECTION TABS ===== */
+  document.querySelectorAll('.section-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const section = tab.dataset.section;
+      switchSection(section);
+    });
+  });
+
+  // Also handle nav menu clicks for Tênis / Beach Tennis
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href');
+      if (href === '#tenis') { e.preventDefault(); switchSection('tenis'); scrollToCalendario(); }
+      if (href === '#beach-tennis') { e.preventDefault(); switchSection('beach'); scrollToCalendario(); }
+    });
+  });
+
+  function scrollToCalendario() {
+    document.getElementById('calendario').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function switchSection(section) {
+    activeSport = section;
+
+    // Update tabs
+    document.querySelectorAll('.section-tab').forEach(t => t.classList.toggle('active', t.dataset.section === section));
+
+    // Update views
+    document.querySelectorAll('.section-view').forEach(v => v.classList.toggle('active', v.id === `view-${section}`));
+
+    // Update hero content
+    const cfg = CONFIG[section];
+    document.querySelector('.hero-tag').textContent = cfg.heroTag;
+    document.querySelector('.hero h1').innerHTML = cfg.heroTitle;
+    document.getElementById('hero-sub').textContent = cfg.heroSub;
+
+    // Toggle body class for BT theming
+    document.body.classList.toggle('bt-active', section === 'beach');
+
+    // Toggle hero-tag color
+    document.querySelector('.hero-tag').classList.toggle('bt', section === 'beach');
+
+    // Update page title
+    document.title = section === 'beach'
+      ? 'Calendário Beach Tennis 2026 — FPT'
+      : 'Calendário Oficial 2026 — Federação Paulista de Tênis';
+  }
+
+  /* ===== CSV PARSER ===== */
   function parseCSV(text) {
     const lines = text.trim().split('\n');
     if (lines.length < 2) return [];
@@ -805,7 +1010,7 @@
       const obj = {};
       headers.forEach((h, i) => obj[h] = vals[i] || '');
       return obj;
-    }).filter(r => r[CONFIG.COLS.torneio]);
+    }).filter(r => r[COLS.torneio]);
   }
 
   function parseDate(str) {
@@ -819,149 +1024,159 @@
   function isExpired(dataFimStr) {
     const d = parseDate(dataFimStr);
     if (!d) return false;
-    // Compare dates at day level (ignore time)
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    d.setHours(0, 0, 0, 0);
+    const today = new Date(); today.setHours(0,0,0,0);
+    d.setHours(0,0,0,0);
     return d < today;
   }
 
   function getStatusClass(status) {
-    const s = (status || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
+    const s = (status||'').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
     if (s.includes('encerr')) return 'status-encerrado';
     if (s.includes('cancel')) return 'status-cancelado';
-    if (s.includes('aberto') || s.includes('inscricao')) return 'status-aberto';
+    if (s.includes('aberto')||s.includes('inscricao')) return 'status-aberto';
     if (s.includes('confirm')) return 'status-confirmado';
     return 'status-default';
   }
 
   function formatDateRange(startStr, endStr) {
-    const s = parseDate(startStr);
-    const e = parseDate(endStr);
+    const s = parseDate(startStr), e = parseDate(endStr);
     if (!s) return startStr || '';
-    const sd = s.getDate();
-    const sm = MONTH_ABBR[s.getMonth()];
+    const sd = s.getDate(), sm = MONTH_ABBR[s.getMonth()];
     if (!e) return `${sd} ${sm}`;
-    const ed = e.getDate();
-    const em = MONTH_ABBR[e.getMonth()];
-    const ey = e.getFullYear();
-    if (s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear()) {
-      return `${sd} – ${ed} ${em} ${ey}`;
-    }
+    const ed = e.getDate(), em = MONTH_ABBR[e.getMonth()], ey = e.getFullYear();
+    if (s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear()) return `${sd} – ${ed} ${em} ${ey}`;
     return `${sd} ${sm} – ${ed} ${em} ${ey}`;
   }
 
   function renderCard(ev) {
-    const dataInicio = ev[CONFIG.COLS.dataInicio] || ev['Data'] || '';
-    const dataFim    = ev[CONFIG.COLS.dataFim] || '';
+    const dataInicio = ev[COLS.dataInicio] || ev['Data'] || '';
+    const dataFim    = ev[COLS.dataFim] || '';
     const d = parseDate(dataInicio);
-    const dayNum  = d ? d.getDate() : '—';
+    const dayNum = d ? d.getDate() : '—';
     const monAbbr = d ? MONTH_ABBR[d.getMonth()] : '';
-
-    // Auto-encerrado se data fim já passou
     const expired = isExpired(dataFim);
-    let status = expired ? 'Encerrado' : (ev[CONFIG.COLS.status] || '');
-    const statusClass = getStatusClass(status);
-
-    const link = ev[CONFIG.COLS.link] || '';
+    const status = expired ? 'Encerrado' : (ev[COLS.status] || '');
+    const link = ev[COLS.link] || '';
     const dateRange = formatDateRange(dataInicio, dataFim);
-
     return `
       <div class="card${expired ? ' card-expired' : ''}">
         <div class="card-top">
           <div class="card-date"><span class="day">${dayNum}</span><span class="month-abbr">${monAbbr}</span></div>
-          ${status ? `<span class="card-status ${statusClass}">${status}</span>` : ''}
+          ${status ? `<span class="card-status ${getStatusClass(status)}">${status}</span>` : ''}
         </div>
-        <div class="card-title">${ev[CONFIG.COLS.torneio]}</div>
+        <div class="card-title">${ev[COLS.torneio]}</div>
         <div class="card-meta">
-          ${ev[CONFIG.COLS.local]    ? `<div class="card-meta-item"><span class="icon">📍</span>${ev[CONFIG.COLS.local]}</div>` : ''}
-          ${dateRange                ? `<div class="card-meta-item"><span class="icon">📅</span>${dateRange}</div>` : ''}
+          ${ev[COLS.local]    ? `<div class="card-meta-item"><span class="icon">📍</span>${ev[COLS.local]}</div>` : ''}
+          ${dateRange         ? `<div class="card-meta-item"><span class="icon">📅</span>${dateRange}</div>` : ''}
         </div>
-        ${ev[CONFIG.COLS.categoria] ? `<span class="card-category">${ev[CONFIG.COLS.categoria]}</span>` : ''}
+        ${ev[COLS.categoria] ? `<span class="card-category">${ev[COLS.categoria]}</span>` : ''}
         ${link ? `<a class="card-link" href="${link}" target="_blank" rel="noopener">Ver detalhes →</a>` : ''}
       </div>`;
   }
 
-  function renderEvents(events) {
-    const app = document.getElementById('app');
-    if (!events.length) {
-      app.innerHTML = '<div class="empty-state"><h3>Nenhum torneio encontrado</h3><p>Tente outro filtro ou busca.</p></div>';
+  function renderEvents(sport) {
+    const s = state[sport];
+    const appEl = document.getElementById(CONFIG[sport].appId);
+    let filtered = [...s.events];
+
+    if (s.filter !== 'todos') {
+      filtered = filtered.filter(ev => {
+        const effective = isExpired(ev[COLS.dataFim]||'') ? 'encerrado'
+          : (ev[COLS.status]||'').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
+        return effective.includes(s.filter);
+      });
+    }
+    if (s.search) {
+      const q = s.search.toLowerCase();
+      filtered = filtered.filter(ev => Object.values(ev).some(v => v.toLowerCase().includes(q)));
+    }
+
+    if (!filtered.length) {
+      appEl.innerHTML = '<div class="empty-state"><h3>Nenhum torneio encontrado</h3><p>Tente outro filtro ou busca.</p></div>';
       return;
     }
+
     const groups = {};
-    events.forEach(ev => {
-      const dataInicio = ev[CONFIG.COLS.dataInicio] || ev['Data'] || '';
+    filtered.forEach(ev => {
+      const dataInicio = ev[COLS.dataInicio] || ev['Data'] || '';
       const d = parseDate(dataInicio);
       const key = d ? `${d.getFullYear()}-${String(d.getMonth()).padStart(2,'0')}` : 'sem-data';
       const label = d ? `${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}` : 'Sem data';
       if (!groups[key]) groups[key] = { label, events: [] };
       groups[key].events.push(ev);
     });
+
     const sorted = Object.entries(groups).sort(([a],[b]) => a.localeCompare(b));
-    const total = events.length;
+    const total = filtered.length;
     let html = `<p class="results-count">${total} torneio${total !== 1 ? 's' : ''} encontrado${total !== 1 ? 's' : ''}</p>`;
     sorted.forEach(([, g]) => {
-      html += `<div class="month-group"><div class="month-header"><span class="month-name">${g.label}</span><span class="month-count">${g.events.length} evento${g.events.length !== 1 ? 's' : ''}</span></div><div class="cards-grid">${g.events.map(renderCard).join('')}</div></div>`;
+      html += `<div class="month-group">
+        <div class="month-header">
+          <span class="month-name">${g.label}</span>
+          <span class="month-count">${g.events.length} evento${g.events.length !== 1 ? 's' : ''}</span>
+        </div>
+        <div class="cards-grid">${g.events.map(renderCard).join('')}</div>
+      </div>`;
     });
-    app.innerHTML = html;
+    appEl.innerHTML = html;
   }
 
-  function applyFilters() {
-    let filtered = [...allEvents];
-    if (activeFilter !== 'todos') {
-      filtered = filtered.filter(ev => {
-        const dataFim = ev[CONFIG.COLS.dataFim] || '';
-        const effectiveStatus = isExpired(dataFim)
-          ? 'encerrado'
-          : (ev[CONFIG.COLS.status] || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
-        return effectiveStatus.includes(activeFilter);
-      });
-    }
-    if (searchTerm) {
-      const q = searchTerm.toLowerCase();
-      filtered = filtered.filter(ev => Object.values(ev).some(v => v.toLowerCase().includes(q)));
-    }
-    renderEvents(filtered);
-  }
-
-  async function loadData() {
-    const app = document.getElementById('app');
-    if (location.protocol === 'file:') {
-      app.innerHTML = '<div class="error-box"><h3>Abra pelo servidor</h3><p>Use GitHub Pages ou Live Server para testar.</p></div>';
-      return;
-    }
-    try {
-      app.innerHTML = '<div class="loading"><div class="spinner"></div><span>Carregando calendário...</span></div>';
-      const res = await fetch(CONFIG.SHEET_URL, { mode: 'cors' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const text = await res.text();
-      allEvents = parseCSV(text);
-      if (allEvents.length === 0) {
-        app.innerHTML = '<div class="error-box"><h3>Planilha vazia ou colunas não reconhecidas</h3><p>Verifique se a primeira linha tem: <code>Torneio, Data Início, Data Fim, Local, Categoria, Status, Link</code></p></div>';
-        return;
-      }
-      applyFilters();
-    } catch (err) {
-      app.innerHTML = `<div class="error-box"><h3>Não foi possível carregar os dados</h3><p>${err.message}</p></div>`;
-    }
-  }
-
+  /* ===== FILTER BUTTONS ===== */
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      const sport = btn.dataset.sport;
+      // Deactivate sibling buttons in same sport section
+      document.querySelectorAll(`.filter-btn[data-sport="${sport}"]`).forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      activeFilter = btn.dataset.filter;
-      applyFilters();
+      state[sport].filter = btn.dataset.filter;
+      renderEvents(sport);
     });
   });
 
-  document.getElementById('search').addEventListener('input', e => {
-    searchTerm = e.target.value;
-    applyFilters();
+  /* ===== SEARCH ===== */
+  document.getElementById('search-tenis').addEventListener('input', e => {
+    state.tenis.search = e.target.value;
+    renderEvents('tenis');
+  });
+  document.getElementById('search-beach').addEventListener('input', e => {
+    state.beach.search = e.target.value;
+    renderEvents('beach');
   });
 
-  loadData();
-  if (CONFIG.AUTO_REFRESH_MINUTES > 0) setInterval(loadData, CONFIG.AUTO_REFRESH_MINUTES * 60 * 1000);
+  /* ===== LOAD DATA ===== */
+  async function loadData(sport) {
+    const cfg = CONFIG[sport];
+    const appEl = document.getElementById(cfg.appId);
+
+    if (location.protocol === 'file:') {
+      appEl.innerHTML = '<div class="error-box"><h3>Abra pelo servidor</h3><p>Use GitHub Pages ou Live Server para testar.</p></div>';
+      return;
+    }
+
+    try {
+      appEl.innerHTML = '<div class="loading"><div class="spinner"></div><span>Carregando calendário...</span></div>';
+      const res = await fetch(cfg.SHEET_URL, { mode: 'cors' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      state[sport].events = parseCSV(text);
+      if (state[sport].events.length === 0) {
+        appEl.innerHTML = '<div class="error-box"><h3>Planilha vazia ou colunas não reconhecidas</h3><p>Verifique se a primeira linha tem: <code>Torneio, Data Início, Data Fim, Local, Categoria, Status, Link</code></p></div>';
+        return;
+      }
+      renderEvents(sport);
+    } catch (err) {
+      appEl.innerHTML = `<div class="error-box"><h3>Não foi possível carregar os dados</h3><p>${err.message}</p></div>`;
+    }
+  }
+
+  // Load both sports on start
+  loadData('tenis');
+  loadData('beach');
+
+  // Auto-refresh
+  if (AUTO_REFRESH_MINUTES > 0) {
+    setInterval(() => { loadData('tenis'); loadData('beach'); }, AUTO_REFRESH_MINUTES * 60 * 1000);
+  }
 </script>
 </body>
 </html>
