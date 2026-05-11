@@ -363,34 +363,46 @@
   .filters {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 1rem 2rem;
+    padding: 0.75rem 2rem;
     display: flex;
-    gap: 0.75rem;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .filter-row {
+    display: flex;
     align-items: center;
+    gap: 0.6rem;
     flex-wrap: wrap;
   }
 
+  .filter-row:last-child {
+    padding-bottom: 0.25rem;
+  }
+
   .filter-label {
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 10px;
+    font-weight: 700;
     color: var(--muted);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-right: 0.25rem;
+    white-space: nowrap;
+    min-width: 56px;
   }
 
   .filter-btn {
     background: none;
     border: 1px solid var(--border);
     border-radius: 100px;
-    padding: 5px 14px;
-    font-size: 12px;
+    padding: 4px 12px;
+    font-size: 11px;
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     color: var(--muted);
     cursor: pointer;
     transition: all 0.15s;
     letter-spacing: 0.02em;
+    white-space: nowrap;
   }
 
   .filter-btn:hover {
@@ -404,6 +416,22 @@
     color: white;
   }
 
+  /* Month buttons — slightly smaller */
+  .filter-btn.month-btn {
+    padding: 3px 10px;
+    font-size: 10px;
+  }
+
+  /* Ativação button special color */
+  .filter-btn.ativacao-btn.active {
+    background: #6a35b4;
+    border-color: #6a35b4;
+  }
+  .filter-btn.ativacao-btn:hover {
+    border-color: #6a35b4;
+    color: #6a35b4;
+  }
+
   .search-wrap {
     margin-left: auto;
     position: relative;
@@ -412,13 +440,13 @@
   .search-wrap input {
     border: 1px solid var(--border);
     border-radius: 100px;
-    padding: 6px 14px 6px 34px;
-    font-size: 12px;
+    padding: 5px 14px 5px 32px;
+    font-size: 11px;
     font-family: 'Montserrat', sans-serif;
     background: var(--secondary);
     color: var(--ink);
     outline: none;
-    width: 210px;
+    width: 200px;
     transition: border-color 0.15s, background 0.15s;
   }
 
@@ -430,10 +458,10 @@
   .search-wrap::before {
     content: '⌕';
     position: absolute;
-    left: 12px;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 16px;
+    font-size: 15px;
     color: var(--muted);
     pointer-events: none;
   }
@@ -593,7 +621,49 @@
   .status-confirmado { background: #e0eeff; color: #1a4a8a; }
   .status-encerrado { background: #f0f0f0; color: #6a6a6a; }
   .status-cancelado { background: var(--tertiary-light); color: var(--tertiary-dark); }
+  .status-confirmar { background: #fff6e0; color: #8a6200; }
   .status-default { background: #f0f0f0; color: #6a6a6a; }
+
+  /* ===== ATIVAÇÃO STAR BADGE ===== */
+  .card.has-ativacao {
+    border-color: #c4a8f0;
+  }
+
+  .ativacao-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #6a35b4;
+    background: #f0e8ff;
+    padding: 2px 8px;
+    border-radius: 100px;
+    align-self: flex-start;
+  }
+
+  .ativacao-badge .star {
+    font-size: 11px;
+  }
+
+  /* BT active ativação */
+  .bt-active .ativacao-badge {
+    color: var(--bt-accent-dark);
+    background: var(--bt-accent-light);
+  }
+  .bt-active .card.has-ativacao {
+    border-color: #fdb98a;
+  }
+  .bt-active .filter-btn.ativacao-btn.active {
+    background: var(--bt-accent);
+    border-color: var(--bt-accent);
+  }
+  .bt-active .filter-btn.ativacao-btn:hover {
+    border-color: var(--bt-accent);
+    color: var(--bt-accent);
+  }
 
   .card-title {
     font-weight: 600;
@@ -666,6 +736,18 @@
     font-size: 1.4rem;
     color: var(--primary);
     margin-bottom: 0.5rem;
+  }
+
+  /* ===== MONTH EMPTY STATE ===== */
+  .month-group.month-empty .month-header {
+    opacity: 0.4;
+  }
+
+  .month-placeholder {
+    font-size: 13px;
+    color: var(--border);
+    padding: 0.5rem 0 1.5rem;
+    font-weight: 500;
   }
 
   /* ===== RESULTS COUNT ===== */
@@ -863,13 +945,35 @@
 <div class="section-view active" id="view-tenis">
   <div class="filters-wrap">
     <div class="filters">
-      <span class="filter-label">Filtrar:</span>
-      <button class="filter-btn active" data-filter="todos" data-sport="tenis">Todos</button>
-      <button class="filter-btn" data-filter="aberto" data-sport="tenis">Inscrições abertas</button>
-      <button class="filter-btn" data-filter="confirmado" data-sport="tenis">Confirmado</button>
-      <button class="filter-btn" data-filter="encerrado" data-sport="tenis">Encerrado</button>
-      <div class="search-wrap">
-        <input type="text" id="search-tenis" placeholder="Buscar torneio..." autocomplete="off">
+      <!-- Row 1: Status + search -->
+      <div class="filter-row">
+        <span class="filter-label">Status</span>
+        <button class="filter-btn active" data-filter="todos" data-type="status" data-sport="tenis">Todos</button>
+        <button class="filter-btn" data-filter="aberto" data-type="status" data-sport="tenis">Inscrições abertas</button>
+        <button class="filter-btn" data-filter="confirmado" data-type="status" data-sport="tenis">Confirmado</button>
+        <button class="filter-btn" data-filter="confirmar" data-type="status" data-sport="tenis">A Confirmar</button>
+        <button class="filter-btn" data-filter="encerrado" data-type="status" data-sport="tenis">Encerrado</button>
+        <button class="filter-btn ativacao-btn" data-filter="ativacao" data-type="status" data-sport="tenis">⭐ Ativação</button>
+        <div class="search-wrap">
+          <input type="text" id="search-tenis" placeholder="Buscar torneio..." autocomplete="off">
+        </div>
+      </div>
+      <!-- Row 2: Meses -->
+      <div class="filter-row" id="month-row-tenis">
+        <span class="filter-label">Mês</span>
+        <button class="filter-btn month-btn active" data-filter="todos" data-type="month" data-sport="tenis">Todos</button>
+        <button class="filter-btn month-btn" data-filter="1"  data-type="month" data-sport="tenis">Jan</button>
+        <button class="filter-btn month-btn" data-filter="2"  data-type="month" data-sport="tenis">Fev</button>
+        <button class="filter-btn month-btn" data-filter="3"  data-type="month" data-sport="tenis">Mar</button>
+        <button class="filter-btn month-btn" data-filter="4"  data-type="month" data-sport="tenis">Abr</button>
+        <button class="filter-btn month-btn" data-filter="5"  data-type="month" data-sport="tenis">Mai</button>
+        <button class="filter-btn month-btn" data-filter="6"  data-type="month" data-sport="tenis">Jun</button>
+        <button class="filter-btn month-btn" data-filter="7"  data-type="month" data-sport="tenis">Jul</button>
+        <button class="filter-btn month-btn" data-filter="8"  data-type="month" data-sport="tenis">Ago</button>
+        <button class="filter-btn month-btn" data-filter="9"  data-type="month" data-sport="tenis">Set</button>
+        <button class="filter-btn month-btn" data-filter="10" data-type="month" data-sport="tenis">Out</button>
+        <button class="filter-btn month-btn" data-filter="11" data-type="month" data-sport="tenis">Nov</button>
+        <button class="filter-btn month-btn" data-filter="12" data-type="month" data-sport="tenis">Dez</button>
       </div>
     </div>
   </div>
@@ -884,13 +988,35 @@
 <div class="section-view" id="view-beach">
   <div class="filters-wrap">
     <div class="filters">
-      <span class="filter-label">Filtrar:</span>
-      <button class="filter-btn active" data-filter="todos" data-sport="beach">Todos</button>
-      <button class="filter-btn" data-filter="aberto" data-sport="beach">Inscrições abertas</button>
-      <button class="filter-btn" data-filter="confirmado" data-sport="beach">Confirmado</button>
-      <button class="filter-btn" data-filter="encerrado" data-sport="beach">Encerrado</button>
-      <div class="search-wrap">
-        <input type="text" id="search-beach" placeholder="Buscar torneio..." autocomplete="off">
+      <!-- Row 1: Status + search -->
+      <div class="filter-row">
+        <span class="filter-label">Status</span>
+        <button class="filter-btn active" data-filter="todos" data-type="status" data-sport="beach">Todos</button>
+        <button class="filter-btn" data-filter="aberto" data-type="status" data-sport="beach">Inscrições abertas</button>
+        <button class="filter-btn" data-filter="confirmado" data-type="status" data-sport="beach">Confirmado</button>
+        <button class="filter-btn" data-filter="confirmar" data-type="status" data-sport="beach">A Confirmar</button>
+        <button class="filter-btn" data-filter="encerrado" data-type="status" data-sport="beach">Encerrado</button>
+        <button class="filter-btn ativacao-btn" data-filter="ativacao" data-type="status" data-sport="beach">⭐ Ativação</button>
+        <div class="search-wrap">
+          <input type="text" id="search-beach" placeholder="Buscar torneio..." autocomplete="off">
+        </div>
+      </div>
+      <!-- Row 2: Meses -->
+      <div class="filter-row" id="month-row-beach">
+        <span class="filter-label">Mês</span>
+        <button class="filter-btn month-btn active" data-filter="todos" data-type="month" data-sport="beach">Todos</button>
+        <button class="filter-btn month-btn" data-filter="1"  data-type="month" data-sport="beach">Jan</button>
+        <button class="filter-btn month-btn" data-filter="2"  data-type="month" data-sport="beach">Fev</button>
+        <button class="filter-btn month-btn" data-filter="3"  data-type="month" data-sport="beach">Mar</button>
+        <button class="filter-btn month-btn" data-filter="4"  data-type="month" data-sport="beach">Abr</button>
+        <button class="filter-btn month-btn" data-filter="5"  data-type="month" data-sport="beach">Mai</button>
+        <button class="filter-btn month-btn" data-filter="6"  data-type="month" data-sport="beach">Jun</button>
+        <button class="filter-btn month-btn" data-filter="7"  data-type="month" data-sport="beach">Jul</button>
+        <button class="filter-btn month-btn" data-filter="8"  data-type="month" data-sport="beach">Ago</button>
+        <button class="filter-btn month-btn" data-filter="9"  data-type="month" data-sport="beach">Set</button>
+        <button class="filter-btn month-btn" data-filter="10" data-type="month" data-sport="beach">Out</button>
+        <button class="filter-btn month-btn" data-filter="11" data-type="month" data-sport="beach">Nov</button>
+        <button class="filter-btn month-btn" data-filter="12" data-type="month" data-sport="beach">Dez</button>
       </div>
     </div>
   </div>
@@ -913,52 +1039,46 @@
       heroTag: 'Federação Paulista de Tênis',
       heroTitle: 'Calendário<br><em>Oficial</em> 2026',
       heroSub: 'Todos os torneios oficiais do tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.',
-      appId: 'app-tenis',
-      sport: 'tenis'
+      appId: 'app-tenis', sport: 'tenis'
     },
     beach: {
       SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTQPQho41Fa8c6Sm7TXiwaCjBTTB1XqCIoMc5KKE8G-U2o6bQjKJMUkStNsZqQW6zR4qVagSuFa3XOY/pub?output=csv',
       heroTag: 'Beach Tennis — FPT',
       heroTitle: 'Calendário<br><em>Oficial</em> 2026',
       heroSub: 'Todos os torneios oficiais do beach tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.',
-      appId: 'app-beach',
-      sport: 'beach'
+      appId: 'app-beach', sport: 'beach'
     }
   };
 
-  const COLS = { torneio: 'Torneio', dataInicio: 'Data Início', dataFim: 'Data Fim', local: 'Local', categoria: 'Categoria', status: 'Status', link: 'Link' };
-  const AUTO_REFRESH_MINUTES = 15;
+  const COLS = {
+    torneio: 'Torneio', dataInicio: 'Data Início', dataFim: 'Data Fim',
+    local: 'Local', categoria: 'Categoria', status: 'Status',
+    ativacao: 'Ativação', link: 'Link'
+  };
 
+  const AUTO_REFRESH_MINUTES = 15;
   const MONTH_NAMES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   const MONTH_ABBR  = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
 
-  // State per sport
+  // State per sport: status filter, month filter, search
   const state = {
-    tenis: { events: [], filter: 'todos', search: '' },
-    beach: { events: [], filter: 'todos', search: '' }
+    tenis: { events: [], status: 'todos', month: 'todos', search: '' },
+    beach: { events: [], status: 'todos', month: 'todos', search: '' }
   };
-
   let activeSport = 'tenis';
 
-  /* ===== NAVBAR SCROLL ===== */
+  /* ===== NAVBAR ===== */
   const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 60);
-  });
+  window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 60));
 
   /* ===== SECTION TABS ===== */
   document.querySelectorAll('.section-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      const section = tab.dataset.section;
-      switchSection(section);
-    });
+    tab.addEventListener('click', () => switchSection(tab.dataset.section));
   });
-
-  // Also handle nav menu clicks for Tênis / Beach Tennis
   document.querySelectorAll('.nav-links a').forEach(a => {
     a.addEventListener('click', e => {
       const href = a.getAttribute('href');
-      if (href === '#tenis') { e.preventDefault(); switchSection('tenis'); scrollToCalendario(); }
+      if (href === '#tenis')        { e.preventDefault(); switchSection('tenis'); scrollToCalendario(); }
       if (href === '#beach-tennis') { e.preventDefault(); switchSection('beach'); scrollToCalendario(); }
     });
   });
@@ -969,26 +1089,14 @@
 
   function switchSection(section) {
     activeSport = section;
-
-    // Update tabs
     document.querySelectorAll('.section-tab').forEach(t => t.classList.toggle('active', t.dataset.section === section));
-
-    // Update views
     document.querySelectorAll('.section-view').forEach(v => v.classList.toggle('active', v.id === `view-${section}`));
-
-    // Update hero content
     const cfg = CONFIG[section];
     document.querySelector('.hero-tag').textContent = cfg.heroTag;
     document.querySelector('.hero h1').innerHTML = cfg.heroTitle;
     document.getElementById('hero-sub').textContent = cfg.heroSub;
-
-    // Toggle body class for BT theming
     document.body.classList.toggle('bt-active', section === 'beach');
-
-    // Toggle hero-tag color
     document.querySelector('.hero-tag').classList.toggle('bt', section === 'beach');
-
-    // Update page title
     document.title = section === 'beach'
       ? 'Calendário Beach Tennis 2026 — FPT'
       : 'Calendário Oficial 2026 — Federação Paulista de Tênis';
@@ -1031,11 +1139,17 @@
 
   function getStatusClass(status) {
     const s = (status||'').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
-    if (s.includes('encerr')) return 'status-encerrado';
-    if (s.includes('cancel')) return 'status-cancelado';
-    if (s.includes('aberto')||s.includes('inscricao')) return 'status-aberto';
-    if (s.includes('confirm')) return 'status-confirmado';
+    if (s.includes('encerr'))  return 'status-encerrado';
+    if (s.includes('cancel'))  return 'status-cancelado';
+    if (s.includes('aberto') || s.includes('inscricao')) return 'status-aberto';
+    if (s.includes('confirm') && !s.includes('mar')) return 'status-confirmado';
+    if (s.includes('confirmar') || s.includes('a confirm')) return 'status-confirmar';
     return 'status-default';
+  }
+
+  function getEffectiveStatus(ev) {
+    if (isExpired(ev[COLS.dataFim] || '')) return 'encerrado';
+    return (ev[COLS.status] || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
   }
 
   function formatDateRange(startStr, endStr) {
@@ -1044,7 +1158,8 @@
     const sd = s.getDate(), sm = MONTH_ABBR[s.getMonth()];
     if (!e) return `${sd} ${sm}`;
     const ed = e.getDate(), em = MONTH_ABBR[e.getMonth()], ey = e.getFullYear();
-    if (s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear()) return `${sd} – ${ed} ${em} ${ey}`;
+    if (s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear())
+      return `${sd} – ${ed} ${em} ${ey}`;
     return `${sd} ${sm} – ${ed} ${em} ${ey}`;
   }
 
@@ -1052,128 +1167,156 @@
     const dataInicio = ev[COLS.dataInicio] || ev['Data'] || '';
     const dataFim    = ev[COLS.dataFim] || '';
     const d = parseDate(dataInicio);
-    const dayNum = d ? d.getDate() : '—';
+    const dayNum  = d ? d.getDate() : '—';
     const monAbbr = d ? MONTH_ABBR[d.getMonth()] : '';
     const expired = isExpired(dataFim);
-    const status = expired ? 'Encerrado' : (ev[COLS.status] || '');
+    const statusLabel = expired ? 'Encerrado' : (ev[COLS.status] || '');
     const link = ev[COLS.link] || '';
     const dateRange = formatDateRange(dataInicio, dataFim);
+    const hasAtivacao = (ev[COLS.ativacao] || '').trim() !== '';
+
     return `
-      <div class="card${expired ? ' card-expired' : ''}">
+      <div class="card${expired ? ' card-expired' : ''}${hasAtivacao ? ' has-ativacao' : ''}">
         <div class="card-top">
           <div class="card-date"><span class="day">${dayNum}</span><span class="month-abbr">${monAbbr}</span></div>
-          ${status ? `<span class="card-status ${getStatusClass(status)}">${status}</span>` : ''}
+          ${statusLabel ? `<span class="card-status ${getStatusClass(statusLabel)}">${statusLabel}</span>` : ''}
         </div>
         <div class="card-title">${ev[COLS.torneio]}</div>
         <div class="card-meta">
-          ${ev[COLS.local]    ? `<div class="card-meta-item"><span class="icon">📍</span>${ev[COLS.local]}</div>` : ''}
-          ${dateRange         ? `<div class="card-meta-item"><span class="icon">📅</span>${dateRange}</div>` : ''}
+          ${ev[COLS.local]  ? `<div class="card-meta-item"><span class="icon">📍</span>${ev[COLS.local]}</div>` : ''}
+          ${dateRange       ? `<div class="card-meta-item"><span class="icon">📅</span>${dateRange}</div>` : ''}
         </div>
-        ${ev[COLS.categoria] ? `<span class="card-category">${ev[COLS.categoria]}</span>` : ''}
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+          ${ev[COLS.categoria]  ? `<span class="card-category">${ev[COLS.categoria]}</span>` : ''}
+          ${hasAtivacao         ? `<span class="ativacao-badge"><span class="star">⭐</span> Ativação</span>` : ''}
+        </div>
         ${link ? `<a class="card-link" href="${link}" target="_blank" rel="noopener">Ver detalhes →</a>` : ''}
       </div>`;
   }
 
+  /* ===== RENDER EVENTS — always show all 12 months ===== */
   function renderEvents(sport) {
     const s = state[sport];
     const appEl = document.getElementById(CONFIG[sport].appId);
-    let filtered = [...s.events];
 
-    if (s.filter !== 'todos') {
-      filtered = filtered.filter(ev => {
-        const effective = isExpired(ev[COLS.dataFim]||'') ? 'encerrado'
-          : (ev[COLS.status]||'').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
-        return effective.includes(s.filter);
-      });
-    }
-    if (s.search) {
-      const q = s.search.toLowerCase();
-      filtered = filtered.filter(ev => Object.values(ev).some(v => v.toLowerCase().includes(q)));
-    }
+    // Apply filters
+    let filtered = s.events.filter(ev => {
+      // Status filter
+      if (s.status !== 'todos') {
+        if (s.status === 'ativacao') {
+          if ((ev[COLS.ativacao] || '').trim() === '') return false;
+        } else {
+          const eff = getEffectiveStatus(ev);
+          if (!eff.includes(s.status)) return false;
+        }
+      }
+      // Month filter
+      if (s.month !== 'todos') {
+        const dataInicio = ev[COLS.dataInicio] || ev['Data'] || '';
+        const d = parseDate(dataInicio);
+        if (!d || (d.getMonth() + 1) !== parseInt(s.month)) return false;
+      }
+      // Search
+      if (s.search) {
+        const q = s.search.toLowerCase();
+        if (!Object.values(ev).some(v => v.toLowerCase().includes(q))) return false;
+      }
+      return true;
+    });
 
-    if (!filtered.length) {
+    if (!s.events.length) {
       appEl.innerHTML = '<div class="empty-state"><h3>Nenhum torneio encontrado</h3><p>Tente outro filtro ou busca.</p></div>';
       return;
     }
 
-    const groups = {};
-    filtered.forEach(ev => {
-      const dataInicio = ev[COLS.dataInicio] || ev['Data'] || '';
-      const d = parseDate(dataInicio);
-      const key = d ? `${d.getFullYear()}-${String(d.getMonth()).padStart(2,'0')}` : 'sem-data';
-      const label = d ? `${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}` : 'Sem data';
-      if (!groups[key]) groups[key] = { label, events: [] };
-      groups[key].events.push(ev);
+    // Build 12-month structure
+    const currentYear = new Date().getFullYear();
+    let html = `<p class="results-count">${filtered.length} torneio${filtered.length !== 1 ? 's' : ''} encontrado${filtered.length !== 1 ? 's' : ''}</p>`;
+
+    // If filtering by month, show only that month
+    const monthsToShow = s.month !== 'todos'
+      ? [parseInt(s.month) - 1]
+      : Array.from({length: 12}, (_, i) => i);
+
+    monthsToShow.forEach(mIdx => {
+      const monthEvents = filtered.filter(ev => {
+        const dataInicio = ev[COLS.dataInicio] || ev['Data'] || '';
+        const d = parseDate(dataInicio);
+        return d && d.getMonth() === mIdx;
+      });
+
+      const monthLabel = `${MONTH_NAMES[mIdx]} ${currentYear}`;
+      const isEmpty = monthEvents.length === 0;
+
+      html += `
+        <div class="month-group${isEmpty ? ' month-empty' : ''}">
+          <div class="month-header">
+            <span class="month-name">${monthLabel}</span>
+            <span class="month-count">${isEmpty ? 'Sem eventos' : `${monthEvents.length} evento${monthEvents.length !== 1 ? 's' : ''}`}</span>
+          </div>
+          ${isEmpty
+            ? `<div class="month-placeholder">—</div>`
+            : `<div class="cards-grid">${monthEvents.map(renderCard).join('')}</div>`
+          }
+        </div>`;
     });
 
-    const sorted = Object.entries(groups).sort(([a],[b]) => a.localeCompare(b));
-    const total = filtered.length;
-    let html = `<p class="results-count">${total} torneio${total !== 1 ? 's' : ''} encontrado${total !== 1 ? 's' : ''}</p>`;
-    sorted.forEach(([, g]) => {
-      html += `<div class="month-group">
-        <div class="month-header">
-          <span class="month-name">${g.label}</span>
-          <span class="month-count">${g.events.length} evento${g.events.length !== 1 ? 's' : ''}</span>
-        </div>
-        <div class="cards-grid">${g.events.map(renderCard).join('')}</div>
-      </div>`;
-    });
     appEl.innerHTML = html;
   }
 
   /* ===== FILTER BUTTONS ===== */
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const sport = btn.dataset.sport;
-      // Deactivate sibling buttons in same sport section
-      document.querySelectorAll(`.filter-btn[data-sport="${sport}"]`).forEach(b => b.classList.remove('active'));
+      const sport  = btn.dataset.sport;
+      const type   = btn.dataset.type;   // 'status' or 'month'
+      const filter = btn.dataset.filter;
+
+      // Deactivate same-type buttons in same sport
+      document.querySelectorAll(`.filter-btn[data-type="${type}"][data-sport="${sport}"]`)
+        .forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      state[sport].filter = btn.dataset.filter;
+
+      if (type === 'status') state[sport].status = filter;
+      if (type === 'month')  state[sport].month  = filter;
+
       renderEvents(sport);
     });
   });
 
   /* ===== SEARCH ===== */
   document.getElementById('search-tenis').addEventListener('input', e => {
-    state.tenis.search = e.target.value;
-    renderEvents('tenis');
+    state.tenis.search = e.target.value; renderEvents('tenis');
   });
   document.getElementById('search-beach').addEventListener('input', e => {
-    state.beach.search = e.target.value;
-    renderEvents('beach');
+    state.beach.search = e.target.value; renderEvents('beach');
   });
 
   /* ===== LOAD DATA ===== */
   async function loadData(sport) {
-    const cfg = CONFIG[sport];
+    const cfg   = CONFIG[sport];
     const appEl = document.getElementById(cfg.appId);
-
     if (location.protocol === 'file:') {
       appEl.innerHTML = '<div class="error-box"><h3>Abra pelo servidor</h3><p>Use GitHub Pages ou Live Server para testar.</p></div>';
       return;
     }
-
     try {
       appEl.innerHTML = '<div class="loading"><div class="spinner"></div><span>Carregando calendário...</span></div>';
       const res = await fetch(cfg.SHEET_URL, { mode: 'cors' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const text = await res.text();
       state[sport].events = parseCSV(text);
-      if (state[sport].events.length === 0) {
-        appEl.innerHTML = '<div class="error-box"><h3>Planilha vazia ou colunas não reconhecidas</h3><p>Verifique se a primeira linha tem: <code>Torneio, Data Início, Data Fim, Local, Categoria, Status, Link</code></p></div>';
+      if (!state[sport].events.length) {
+        appEl.innerHTML = '<div class="error-box"><h3>Planilha vazia</h3><p>Verifique os cabeçalhos: <code>Torneio, Data Início, Data Fim, Local, Categoria, Status, Ativação, Link</code></p></div>';
         return;
       }
       renderEvents(sport);
     } catch (err) {
-      appEl.innerHTML = `<div class="error-box"><h3>Não foi possível carregar os dados</h3><p>${err.message}</p></div>`;
+      appEl.innerHTML = `<div class="error-box"><h3>Erro ao carregar</h3><p>${err.message}</p></div>`;
     }
   }
 
-  // Load both sports on start
   loadData('tenis');
   loadData('beach');
-
-  // Auto-refresh
   if (AUTO_REFRESH_MINUTES > 0) {
     setInterval(() => { loadData('tenis'); loadData('beach'); }, AUTO_REFRESH_MINUTES * 60 * 1000);
   }
