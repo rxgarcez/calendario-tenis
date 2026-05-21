@@ -260,21 +260,22 @@
     position: sticky;
     top: 0;
     z-index: 50;
+    overflow-x: auto;
   }
 
   .section-tab {
     flex: 0 0 auto;
-    padding: 0 2.5rem;
+    padding: 0 1.75rem;
     height: 52px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     font-family: 'Montserrat', sans-serif;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255,255,255,0.45);
     background: none;
     border: none;
     border-bottom: 3px solid transparent;
@@ -283,73 +284,64 @@
     white-space: nowrap;
   }
 
-  .section-tab:hover {
-    color: rgba(255,255,255,0.85);
-  }
+  .section-tab:hover { color: rgba(255,255,255,0.8); }
+  .section-tab.active { color: white; }
+  .section-tab[data-section="tenis"].active  { border-bottom-color: var(--tertiary); }
+  .section-tab[data-section="beach"].active  { border-bottom-color: var(--bt-accent); }
+  .section-tab[data-section="damas"].active  { border-bottom-color: #e040a0; }
+  .section-tab[data-section="cursos"].active { border-bottom-color: #34b89a; }
 
-  .section-tab.active {
-    color: white;
-    border-bottom-color: var(--tertiary);
-  }
-
-  .section-tab.bt-tab.active {
-    border-bottom-color: var(--bt-accent);
-  }
-
-  .tab-icon {
-    font-size: 16px;
-    line-height: 1;
-  }
+  .tab-icon { font-size: 15px; line-height: 1; }
 
   /* ===== SECTION VIEWS ===== */
   .section-view { display: none; }
   .section-view.active { display: block; }
 
-  /* ===== BEACH TENNIS THEMING ===== */
-  /* When beach tennis is active, accent color switches to orange */
-  .bt-active .filter-btn.active {
-    background: var(--bt-accent);
-    border-color: var(--bt-accent);
-  }
+  /* ===== SPORT THEME OVERRIDES ===== */
+  /* Beach Tennis */
+  .bt-active .filter-btn.active              { background: var(--bt-accent); border-color: var(--bt-accent); }
+  .bt-active .filter-btn:hover               { border-color: var(--bt-accent); color: var(--bt-accent); }
+  .bt-active .filter-btn.ativacao-btn.active { background: var(--bt-accent); border-color: var(--bt-accent); }
+  .bt-active .search-wrap input:focus        { border-color: var(--bt-accent); }
+  .bt-active .card-date                      { background: var(--bt-accent); }
+  .bt-active .month-name                     { color: var(--bt-accent-dark); }
+  .bt-active .card-category                  { color: var(--bt-accent-dark); background: var(--bt-accent-light); }
+  .bt-active .card-link                      { color: var(--bt-accent-dark); }
+  .bt-active .card-link:hover                { color: var(--bt-accent); }
+  .bt-active .spinner                        { border-top-color: var(--bt-accent); }
+  .bt-active .ativacao-badge                 { color: var(--bt-accent-dark); background: var(--bt-accent-light); }
+  .bt-active .card.has-ativacao              { border-color: #fdb98a; }
 
-  .bt-active .filter-btn:hover {
-    border-color: var(--bt-accent);
-    color: var(--bt-accent);
-  }
+  /* Damas */
+  .damas-active .filter-btn.active              { background: #e040a0; border-color: #e040a0; }
+  .damas-active .filter-btn:hover               { border-color: #e040a0; color: #e040a0; }
+  .damas-active .filter-btn.ativacao-btn.active { background: #e040a0; border-color: #e040a0; }
+  .damas-active .search-wrap input:focus        { border-color: #e040a0; }
+  .damas-active .card-date                      { background: #e040a0; }
+  .damas-active .month-name                     { color: #9a1060; }
+  .damas-active .card-category                  { color: #9a1060; background: #fce4f4; }
+  .damas-active .card-link                      { color: #9a1060; }
+  .damas-active .card-link:hover                { color: #e040a0; }
+  .damas-active .spinner                        { border-top-color: #e040a0; }
+  .damas-active .ativacao-badge                 { color: #9a1060; background: #fce4f4; }
+  .damas-active .card.has-ativacao              { border-color: #f09ad0; }
 
-  .bt-active .search-wrap input:focus {
-    border-color: var(--bt-accent);
-  }
+  /* Cursos */
+  .cursos-active .filter-btn.active              { background: #34b89a; border-color: #34b89a; }
+  .cursos-active .filter-btn:hover               { border-color: #34b89a; color: #34b89a; }
+  .cursos-active .filter-btn.ativacao-btn.active { background: #34b89a; border-color: #34b89a; }
+  .cursos-active .search-wrap input:focus        { border-color: #34b89a; }
+  .cursos-active .card-date                      { background: #34b89a; }
+  .cursos-active .month-name                     { color: #1a6e5a; }
+  .cursos-active .card-category                  { color: #1a6e5a; background: #d4f5ee; }
+  .cursos-active .card-link                      { color: #1a6e5a; }
+  .cursos-active .card-link:hover                { color: #34b89a; }
+  .cursos-active .spinner                        { border-top-color: #34b89a; }
 
-  .bt-active .card-date {
-    background: var(--bt-accent);
-  }
-
-  .bt-active .month-name {
-    color: var(--bt-accent-dark);
-  }
-
-  .bt-active .card-category {
-    color: var(--bt-accent-dark);
-    background: var(--bt-accent-light);
-  }
-
-  .bt-active .card-link {
-    color: var(--bt-accent-dark);
-  }
-
-  .bt-active .card-link:hover {
-    color: var(--bt-accent);
-  }
-
-  .bt-active .spinner {
-    border-top-color: var(--bt-accent);
-  }
-
-  /* ===== HERO BADGE — beach tennis variant ===== */
-  .hero-tag.bt {
-    background: rgba(253,116,47,0.85);
-  }
+  /* Hero tag variants */
+  .hero-tag.bt     { background: rgba(253,116,47,0.85); }
+  .hero-tag.damas  { background: rgba(224,64,160,0.85); }
+  .hero-tag.cursos { background: rgba(52,184,154,0.85); }
 
   /* ===== FILTROS ===== */
   .filters-wrap {
@@ -934,10 +926,16 @@
 <!-- SECTION TABS -->
 <div class="section-tabs" id="calendario">
   <button class="section-tab active" data-section="tenis" id="tab-tenis">
-    <span class="tab-icon">🎾</span> Tênis
+    <span class="tab-icon">&#127934;</span> Tênis
   </button>
-  <button class="section-tab bt-tab" data-section="beach" id="tab-beach">
-    <span class="tab-icon">🏖️</span> Beach Tennis
+  <button class="section-tab" data-section="beach" id="tab-beach">
+    <span class="tab-icon">&#127958;</span> Beach Tennis
+  </button>
+  <button class="section-tab" data-section="damas" id="tab-damas">
+    <span class="tab-icon">&#128105;</span> Damas
+  </button>
+  <button class="section-tab" data-section="cursos" id="tab-cursos">
+    <span class="tab-icon">&#128218;</span> Cursos
   </button>
 </div>
 
@@ -945,32 +943,29 @@
 <div class="section-view active" id="view-tenis">
   <div class="filters-wrap">
     <div class="filters">
-      <!-- Row 1: Status + search -->
       <div class="filter-row">
         <span class="filter-label">Status</span>
         <button class="filter-btn active" data-filter="todos" data-type="status" data-sport="tenis">Todos</button>
-        <button class="filter-btn" data-filter="aberto" data-type="status" data-sport="tenis">Inscrições abertas</button>
         <button class="filter-btn" data-filter="confirmado" data-type="status" data-sport="tenis">Confirmado</button>
-        <button class="filter-btn" data-filter="confirmar" data-type="status" data-sport="tenis">A Confirmar</button>
         <button class="filter-btn" data-filter="encerrado" data-type="status" data-sport="tenis">Encerrado</button>
-        <button class="filter-btn ativacao-btn" data-filter="ativacao" data-type="status" data-sport="tenis">⭐ Ativação</button>
+        <button class="filter-btn" data-filter="confirmar" data-type="status" data-sport="tenis">A Confirmar</button>
+        <button class="filter-btn ativacao-btn" data-filter="ativacao" data-type="status" data-sport="tenis">&#11088; Ativação</button>
         <div class="search-wrap">
-          <input type="text" id="search-tenis" placeholder="Buscar torneio..." autocomplete="off">
+          <input type="text" id="search-tenis" placeholder="Buscar evento..." autocomplete="off">
         </div>
       </div>
-      <!-- Row 2: Meses -->
-      <div class="filter-row" id="month-row-tenis">
+      <div class="filter-row">
         <span class="filter-label">Mês</span>
         <button class="filter-btn month-btn active" data-filter="todos" data-type="month" data-sport="tenis">Todos</button>
-        <button class="filter-btn month-btn" data-filter="1"  data-type="month" data-sport="tenis">Jan</button>
-        <button class="filter-btn month-btn" data-filter="2"  data-type="month" data-sport="tenis">Fev</button>
-        <button class="filter-btn month-btn" data-filter="3"  data-type="month" data-sport="tenis">Mar</button>
-        <button class="filter-btn month-btn" data-filter="4"  data-type="month" data-sport="tenis">Abr</button>
-        <button class="filter-btn month-btn" data-filter="5"  data-type="month" data-sport="tenis">Mai</button>
-        <button class="filter-btn month-btn" data-filter="6"  data-type="month" data-sport="tenis">Jun</button>
-        <button class="filter-btn month-btn" data-filter="7"  data-type="month" data-sport="tenis">Jul</button>
-        <button class="filter-btn month-btn" data-filter="8"  data-type="month" data-sport="tenis">Ago</button>
-        <button class="filter-btn month-btn" data-filter="9"  data-type="month" data-sport="tenis">Set</button>
+        <button class="filter-btn month-btn" data-filter="1" data-type="month" data-sport="tenis">Jan</button>
+        <button class="filter-btn month-btn" data-filter="2" data-type="month" data-sport="tenis">Fev</button>
+        <button class="filter-btn month-btn" data-filter="3" data-type="month" data-sport="tenis">Mar</button>
+        <button class="filter-btn month-btn" data-filter="4" data-type="month" data-sport="tenis">Abr</button>
+        <button class="filter-btn month-btn" data-filter="5" data-type="month" data-sport="tenis">Mai</button>
+        <button class="filter-btn month-btn" data-filter="6" data-type="month" data-sport="tenis">Jun</button>
+        <button class="filter-btn month-btn" data-filter="7" data-type="month" data-sport="tenis">Jul</button>
+        <button class="filter-btn month-btn" data-filter="8" data-type="month" data-sport="tenis">Ago</button>
+        <button class="filter-btn month-btn" data-filter="9" data-type="month" data-sport="tenis">Set</button>
         <button class="filter-btn month-btn" data-filter="10" data-type="month" data-sport="tenis">Out</button>
         <button class="filter-btn month-btn" data-filter="11" data-type="month" data-sport="tenis">Nov</button>
         <button class="filter-btn month-btn" data-filter="12" data-type="month" data-sport="tenis">Dez</button>
@@ -988,32 +983,29 @@
 <div class="section-view" id="view-beach">
   <div class="filters-wrap">
     <div class="filters">
-      <!-- Row 1: Status + search -->
       <div class="filter-row">
         <span class="filter-label">Status</span>
         <button class="filter-btn active" data-filter="todos" data-type="status" data-sport="beach">Todos</button>
-        <button class="filter-btn" data-filter="aberto" data-type="status" data-sport="beach">Inscrições abertas</button>
         <button class="filter-btn" data-filter="confirmado" data-type="status" data-sport="beach">Confirmado</button>
-        <button class="filter-btn" data-filter="confirmar" data-type="status" data-sport="beach">A Confirmar</button>
         <button class="filter-btn" data-filter="encerrado" data-type="status" data-sport="beach">Encerrado</button>
-        <button class="filter-btn ativacao-btn" data-filter="ativacao" data-type="status" data-sport="beach">⭐ Ativação</button>
+        <button class="filter-btn" data-filter="confirmar" data-type="status" data-sport="beach">A Confirmar</button>
+        <button class="filter-btn ativacao-btn" data-filter="ativacao" data-type="status" data-sport="beach">&#11088; Ativação</button>
         <div class="search-wrap">
-          <input type="text" id="search-beach" placeholder="Buscar torneio..." autocomplete="off">
+          <input type="text" id="search-beach" placeholder="Buscar evento..." autocomplete="off">
         </div>
       </div>
-      <!-- Row 2: Meses -->
-      <div class="filter-row" id="month-row-beach">
+      <div class="filter-row">
         <span class="filter-label">Mês</span>
         <button class="filter-btn month-btn active" data-filter="todos" data-type="month" data-sport="beach">Todos</button>
-        <button class="filter-btn month-btn" data-filter="1"  data-type="month" data-sport="beach">Jan</button>
-        <button class="filter-btn month-btn" data-filter="2"  data-type="month" data-sport="beach">Fev</button>
-        <button class="filter-btn month-btn" data-filter="3"  data-type="month" data-sport="beach">Mar</button>
-        <button class="filter-btn month-btn" data-filter="4"  data-type="month" data-sport="beach">Abr</button>
-        <button class="filter-btn month-btn" data-filter="5"  data-type="month" data-sport="beach">Mai</button>
-        <button class="filter-btn month-btn" data-filter="6"  data-type="month" data-sport="beach">Jun</button>
-        <button class="filter-btn month-btn" data-filter="7"  data-type="month" data-sport="beach">Jul</button>
-        <button class="filter-btn month-btn" data-filter="8"  data-type="month" data-sport="beach">Ago</button>
-        <button class="filter-btn month-btn" data-filter="9"  data-type="month" data-sport="beach">Set</button>
+        <button class="filter-btn month-btn" data-filter="1" data-type="month" data-sport="beach">Jan</button>
+        <button class="filter-btn month-btn" data-filter="2" data-type="month" data-sport="beach">Fev</button>
+        <button class="filter-btn month-btn" data-filter="3" data-type="month" data-sport="beach">Mar</button>
+        <button class="filter-btn month-btn" data-filter="4" data-type="month" data-sport="beach">Abr</button>
+        <button class="filter-btn month-btn" data-filter="5" data-type="month" data-sport="beach">Mai</button>
+        <button class="filter-btn month-btn" data-filter="6" data-type="month" data-sport="beach">Jun</button>
+        <button class="filter-btn month-btn" data-filter="7" data-type="month" data-sport="beach">Jul</button>
+        <button class="filter-btn month-btn" data-filter="8" data-type="month" data-sport="beach">Ago</button>
+        <button class="filter-btn month-btn" data-filter="9" data-type="month" data-sport="beach">Set</button>
         <button class="filter-btn month-btn" data-filter="10" data-type="month" data-sport="beach">Out</button>
         <button class="filter-btn month-btn" data-filter="11" data-type="month" data-sport="beach">Nov</button>
         <button class="filter-btn month-btn" data-filter="12" data-type="month" data-sport="beach">Dez</button>
@@ -1027,44 +1019,143 @@
   </main>
 </div>
 
+<!-- DAMAS SECTION -->
+<div class="section-view" id="view-damas">
+  <div class="filters-wrap">
+    <div class="filters">
+      <div class="filter-row">
+        <span class="filter-label">Status</span>
+        <button class="filter-btn active" data-filter="todos" data-type="status" data-sport="damas">Todos</button>
+        <button class="filter-btn" data-filter="confirmado" data-type="status" data-sport="damas">Confirmado</button>
+        <button class="filter-btn" data-filter="encerrado" data-type="status" data-sport="damas">Encerrado</button>
+        <button class="filter-btn" data-filter="confirmar" data-type="status" data-sport="damas">A Confirmar</button>
+        <button class="filter-btn ativacao-btn" data-filter="ativacao" data-type="status" data-sport="damas">&#11088; Ativação</button>
+        <div class="search-wrap">
+          <input type="text" id="search-damas" placeholder="Buscar evento..." autocomplete="off">
+        </div>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Mês</span>
+        <button class="filter-btn month-btn active" data-filter="todos" data-type="month" data-sport="damas">Todos</button>
+        <button class="filter-btn month-btn" data-filter="1" data-type="month" data-sport="damas">Jan</button>
+        <button class="filter-btn month-btn" data-filter="2" data-type="month" data-sport="damas">Fev</button>
+        <button class="filter-btn month-btn" data-filter="3" data-type="month" data-sport="damas">Mar</button>
+        <button class="filter-btn month-btn" data-filter="4" data-type="month" data-sport="damas">Abr</button>
+        <button class="filter-btn month-btn" data-filter="5" data-type="month" data-sport="damas">Mai</button>
+        <button class="filter-btn month-btn" data-filter="6" data-type="month" data-sport="damas">Jun</button>
+        <button class="filter-btn month-btn" data-filter="7" data-type="month" data-sport="damas">Jul</button>
+        <button class="filter-btn month-btn" data-filter="8" data-type="month" data-sport="damas">Ago</button>
+        <button class="filter-btn month-btn" data-filter="9" data-type="month" data-sport="damas">Set</button>
+        <button class="filter-btn month-btn" data-filter="10" data-type="month" data-sport="damas">Out</button>
+        <button class="filter-btn month-btn" data-filter="11" data-type="month" data-sport="damas">Nov</button>
+        <button class="filter-btn month-btn" data-filter="12" data-type="month" data-sport="damas">Dez</button>
+      </div>
+    </div>
+  </div>
+  <main>
+    <div id="app-damas">
+      <div class="loading"><div class="spinner"></div><span>Carregando calendário...</span></div>
+    </div>
+  </main>
+</div>
+
+<!-- CURSOS SECTION -->
+<div class="section-view" id="view-cursos">
+  <div class="filters-wrap">
+    <div class="filters">
+      <div class="filter-row">
+        <span class="filter-label">Status</span>
+        <button class="filter-btn active" data-filter="todos" data-type="status" data-sport="cursos">Todos</button>
+        <button class="filter-btn" data-filter="confirmado" data-type="status" data-sport="cursos">Confirmado</button>
+        <button class="filter-btn" data-filter="encerrado" data-type="status" data-sport="cursos">Encerrado</button>
+        <button class="filter-btn" data-filter="confirmar" data-type="status" data-sport="cursos">A Confirmar</button>
+        <button class="filter-btn ativacao-btn" data-filter="ativacao" data-type="status" data-sport="cursos">&#11088; Ativação</button>
+        <div class="search-wrap">
+          <input type="text" id="search-cursos" placeholder="Buscar evento..." autocomplete="off">
+        </div>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Mês</span>
+        <button class="filter-btn month-btn active" data-filter="todos" data-type="month" data-sport="cursos">Todos</button>
+        <button class="filter-btn month-btn" data-filter="1" data-type="month" data-sport="cursos">Jan</button>
+        <button class="filter-btn month-btn" data-filter="2" data-type="month" data-sport="cursos">Fev</button>
+        <button class="filter-btn month-btn" data-filter="3" data-type="month" data-sport="cursos">Mar</button>
+        <button class="filter-btn month-btn" data-filter="4" data-type="month" data-sport="cursos">Abr</button>
+        <button class="filter-btn month-btn" data-filter="5" data-type="month" data-sport="cursos">Mai</button>
+        <button class="filter-btn month-btn" data-filter="6" data-type="month" data-sport="cursos">Jun</button>
+        <button class="filter-btn month-btn" data-filter="7" data-type="month" data-sport="cursos">Jul</button>
+        <button class="filter-btn month-btn" data-filter="8" data-type="month" data-sport="cursos">Ago</button>
+        <button class="filter-btn month-btn" data-filter="9" data-type="month" data-sport="cursos">Set</button>
+        <button class="filter-btn month-btn" data-filter="10" data-type="month" data-sport="cursos">Out</button>
+        <button class="filter-btn month-btn" data-filter="11" data-type="month" data-sport="cursos">Nov</button>
+        <button class="filter-btn month-btn" data-filter="12" data-type="month" data-sport="cursos">Dez</button>
+      </div>
+    </div>
+  </div>
+  <main>
+    <div id="app-cursos">
+      <div class="loading"><div class="spinner"></div><span>Carregando calendário...</span></div>
+    </div>
+  </main>
+</div>
+
 <footer>
   <p>Dados atualizados automaticamente via Google Sheets &nbsp;·&nbsp; <a href="https://www.fptenis.com.br" target="_blank">fptenis.com.br</a></p>
 </footer>
 
 <script>
   /* ===== CONFIG ===== */
-  const CONFIG = {
-    tenis: {
-      SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3pfKYoo6E_DCks1OJ23iIQ97W0ssUuChvaVxhdkzhyRlfNkZu9TO0lr1UPOd56TSLXZhx2ZfZHMqC/pub?output=csv',
-      heroTag: 'Federação Paulista de Tênis',
-      heroTitle: 'Calendário<br><em>Oficial</em> 2026',
-      heroSub: 'Todos os torneios oficiais do tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.',
-      appId: 'app-tenis', sport: 'tenis'
-    },
-    beach: {
-      SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTQPQho41Fa8c6Sm7TXiwaCjBTTB1XqCIoMc5KKE8G-U2o6bQjKJMUkStNsZqQW6zR4qVagSuFa3XOY/pub?output=csv',
-      heroTag: 'Beach Tennis — FPT',
-      heroTitle: 'Calendário<br><em>Oficial</em> 2026',
-      heroSub: 'Todos os torneios oficiais do beach tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.',
-      appId: 'app-beach', sport: 'beach'
-    }
-  };
-
-  const COLS = {
-    torneio: 'Torneio', dataInicio: 'Data Início', dataFim: 'Data Fim',
-    local: 'Local', categoria: 'Categoria', status: 'Status',
-    ativacao: 'Ativação', link: 'Link'
-  };
-
+  // Single sheet URL — all sports come from one spreadsheet
+  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR0qb_2USYFimuX_1vvu1BIiRhZ3IPlOFDN0dmVxvsixb2lgy40AcbOIYZQLcEs2A5JsGn9SDLudQMh/pub?output=csv';
   const AUTO_REFRESH_MINUTES = 15;
+
+  // Column names in the spreadsheet
+  const COLS = {
+    dataInicio:  'Data Inicio',
+    dataFim:     'Data Fim',
+    nome:        'Nome do Evento',
+    categoria:   'Categoria',
+    clube:       'Academia/Clube',
+    local:       'Local',
+    ativacao:    'Ativação',
+    link:        'Link Tênis Integrado'
+  };
+
+  // Which categories belong to each tab
+  const SPORT_CATS = {
+    beach:  ['beach tennis'],
+    damas:  ['damas'],
+    cursos: ['curso', 'cursos'],
+    tenis:  null   // everything else
+  };
+
+  function getSport(categoria) {
+    const c = (categoria || '').toLowerCase().trim();
+    if (SPORT_CATS.beach.includes(c))  return 'beach';
+    if (SPORT_CATS.damas.includes(c))  return 'damas';
+    if (SPORT_CATS.cursos.includes(c)) return 'cursos';
+    return 'tenis';
+  }
+
+  // Hero content per sport
+  const HERO = {
+    tenis:  { tag: 'Federação Paulista de Tênis',  title: 'Calendário<br><em>Oficial</em> 2026', sub: 'Todos os torneios oficiais do tênis paulista — acompanhe, planeje e inscreva-se.', tagClass: '' },
+    beach:  { tag: 'Beach Tennis — FPT',            title: 'Calendário<br><em>Oficial</em> 2026', sub: 'Todos os torneios oficiais do beach tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.', tagClass: 'bt' },
+    damas:  { tag: 'Damas — FPT',                  title: 'Calendário<br><em>Oficial</em> 2026', sub: 'Todos os torneios oficiais do tênis feminino paulista — acompanhe, planeje e inscreva-se.', tagClass: 'damas' },
+    cursos: { tag: 'Cursos & Formações — FPT',      title: 'Calendário<br><em>Oficial</em> 2026', sub: 'Todos os cursos e formações oficiais da Federação Paulista de Tênis.', tagClass: 'cursos' }
+  };
+
   const MONTH_NAMES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   const MONTH_ABBR  = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
 
-  // State per sport: status filter, month filter, search
+  // Per-sport state
   const state = {
-    tenis: { events: [], status: 'todos', month: 'todos', search: '' },
-    beach: { events: [], status: 'todos', month: 'todos', search: '' }
+    tenis:  { events: [], status: 'todos', month: 'todos', search: '' },
+    beach:  { events: [], status: 'todos', month: 'todos', search: '' },
+    damas:  { events: [], status: 'todos', month: 'todos', search: '' },
+    cursos: { events: [], status: 'todos', month: 'todos', search: '' }
   };
+
   let activeSport = 'tenis';
 
   /* ===== NAVBAR ===== */
@@ -1075,11 +1166,12 @@
   document.querySelectorAll('.section-tab').forEach(tab => {
     tab.addEventListener('click', () => switchSection(tab.dataset.section));
   });
+
   document.querySelectorAll('.nav-links a').forEach(a => {
     a.addEventListener('click', e => {
       const href = a.getAttribute('href');
-      if (href === '#tenis')        { e.preventDefault(); switchSection('tenis'); scrollToCalendario(); }
-      if (href === '#beach-tennis') { e.preventDefault(); switchSection('beach'); scrollToCalendario(); }
+      if (href === '#tenis')        { e.preventDefault(); switchSection('tenis');  scrollToCalendario(); }
+      if (href === '#beach-tennis') { e.preventDefault(); switchSection('beach');  scrollToCalendario(); }
     });
   });
 
@@ -1090,23 +1182,24 @@
   function switchSection(section) {
     activeSport = section;
     document.querySelectorAll('.section-tab').forEach(t => t.classList.toggle('active', t.dataset.section === section));
-    document.querySelectorAll('.section-view').forEach(v => v.classList.toggle('active', v.id === `view-${section}`));
-    const cfg = CONFIG[section];
-    document.querySelector('.hero-tag').textContent = cfg.heroTag;
-    document.querySelector('.hero h1').innerHTML = cfg.heroTitle;
-    document.getElementById('hero-sub').textContent = cfg.heroSub;
-    document.body.classList.toggle('bt-active', section === 'beach');
-    document.querySelector('.hero-tag').classList.toggle('bt', section === 'beach');
-    document.title = section === 'beach'
-      ? 'Calendário Beach Tennis 2026 — FPT'
-      : 'Calendário Oficial 2026 — Federação Paulista de Tênis';
+    document.querySelectorAll('.section-view').forEach(v => v.classList.toggle('active', v.id === 'view-' + section));
+    document.body.className = document.body.className
+      .replace(/\b(bt|damas|cursos)-active\b/g, '').trim();
+    if (section !== 'tenis') document.body.classList.add(section + '-active');
+    const h = HERO[section];
+    document.querySelector('.hero-tag').textContent = h.tag;
+    document.querySelector('.hero-tag').className = 'hero-tag' + (h.tagClass ? ' ' + h.tagClass : '');
+    document.querySelector('.hero h1').innerHTML = h.title;
+    document.getElementById('hero-sub').textContent = h.sub;
+    const titles = { tenis: 'Calendário Tênis 2026 — FPT', beach: 'Calendário Beach Tennis 2026 — FPT', damas: 'Calendário Damas 2026 — FPT', cursos: 'Cursos 2026 — FPT' };
+    document.title = titles[section];
   }
 
   /* ===== CSV PARSER ===== */
   function parseCSV(text) {
     const lines = text.trim().split('\n');
     if (lines.length < 2) return [];
-    const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g,'').trim());
+    const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
     return lines.slice(1).map(line => {
       const vals = []; let cur = '', inQ = false;
       for (let i = 0; i < line.length; i++) {
@@ -1118,105 +1211,103 @@
       const obj = {};
       headers.forEach((h, i) => obj[h] = vals[i] || '');
       return obj;
-    }).filter(r => r[COLS.torneio]);
+    }).filter(r => r[COLS.nome] && r[COLS.nome].trim());
   }
 
   function parseDate(str) {
     if (!str) return null;
     let m;
-    if ((m = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/))) return new Date(+m[3], +m[2]-1, +m[1]);
-    if ((m = str.match(/^(\d{4})[\/\-](\d{2})[\/\-](\d{2})$/))) return new Date(+m[1], +m[2]-1, +m[3]);
+    if ((m = str.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/))) return new Date(+m[3], +m[2]-1, +m[1]);
+    if ((m = str.match(/^(\d{4})[\/-](\d{2})[\/-](\d{2})$/)))      return new Date(+m[1], +m[2]-1, +m[3]);
     const d = new Date(str); return isNaN(d) ? null : d;
   }
 
   function isExpired(dataFimStr) {
     const d = parseDate(dataFimStr);
     if (!d) return false;
-    const today = new Date(); today.setHours(0,0,0,0);
-    d.setHours(0,0,0,0);
+    const today = new Date(); today.setHours(0,0,0,0); d.setHours(0,0,0,0);
     return d < today;
   }
 
-  function getStatusClass(status) {
-    const s = (status||'').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
-    if (s.includes('encerr'))  return 'status-encerrado';
-    if (s.includes('cancel'))  return 'status-cancelado';
-    if (s.includes('aberto') || s.includes('inscricao')) return 'status-aberto';
-    if (s.includes('confirm') && !s.includes('mar')) return 'status-confirmado';
-    if (s.includes('confirmar') || s.includes('a confirm')) return 'status-confirmar';
-    return 'status-default';
+  function getStatus(ev) {
+    const fim = ev[COLS.dataFim] || '';
+    const ini = ev[COLS.dataInicio] || '';
+    if (!ini) return 'a-confirmar';
+    if (isExpired(fim || ini)) return 'encerrado';
+    return 'confirmado';
   }
 
-  function getEffectiveStatus(ev) {
-    if (isExpired(ev[COLS.dataFim] || '')) return 'encerrado';
-    return (ev[COLS.status] || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
+  function getStatusLabel(status) {
+    return { 'confirmado': 'Confirmado', 'encerrado': 'Encerrado', 'a-confirmar': 'A Confirmar' }[status] || 'Confirmado';
+  }
+
+  function getStatusClass(status) {
+    return { 'confirmado': 'status-confirmado', 'encerrado': 'status-encerrado', 'a-confirmar': 'status-confirmar' }[status] || 'status-default';
   }
 
   function formatDateRange(startStr, endStr) {
     const s = parseDate(startStr), e = parseDate(endStr);
-    if (!s) return startStr || '';
+    if (!s) return '';
     const sd = s.getDate(), sm = MONTH_ABBR[s.getMonth()];
-    if (!e) return `${sd} ${sm}`;
+    if (!e) return sd + ' ' + sm + ' ' + s.getFullYear();
     const ed = e.getDate(), em = MONTH_ABBR[e.getMonth()], ey = e.getFullYear();
     if (s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear())
-      return `${sd} – ${ed} ${em} ${ey}`;
-    return `${sd} ${sm} – ${ed} ${em} ${ey}`;
+      return sd + ' – ' + ed + ' ' + em + ' ' + ey;
+    return sd + ' ' + sm + ' – ' + ed + ' ' + em + ' ' + ey;
   }
 
   function renderCard(ev) {
-    const dataInicio = ev[COLS.dataInicio] || ev['Data'] || '';
-    const dataFim    = ev[COLS.dataFim] || '';
-    const d = parseDate(dataInicio);
+    const ini = ev[COLS.dataInicio] || '';
+    const fim = ev[COLS.dataFim] || '';
+    const d = parseDate(ini);
     const dayNum  = d ? d.getDate() : '—';
     const monAbbr = d ? MONTH_ABBR[d.getMonth()] : '';
-    const expired = isExpired(dataFim);
-    const statusLabel = expired ? 'Encerrado' : (ev[COLS.status] || '');
-    const link = ev[COLS.link] || '';
-    const dateRange = formatDateRange(dataInicio, dataFim);
-    const hasAtivacao = (ev[COLS.ativacao] || '').trim() !== '';
-
-    return `
-      <div class="card${expired ? ' card-expired' : ''}${hasAtivacao ? ' has-ativacao' : ''}">
-        <div class="card-top">
-          <div class="card-date"><span class="day">${dayNum}</span><span class="month-abbr">${monAbbr}</span></div>
-          ${statusLabel ? `<span class="card-status ${getStatusClass(statusLabel)}">${statusLabel}</span>` : ''}
-        </div>
-        <div class="card-title">${ev[COLS.torneio]}</div>
-        <div class="card-meta">
-          ${ev[COLS.local]  ? `<div class="card-meta-item"><span class="icon">📍</span>${ev[COLS.local]}</div>` : ''}
-          ${dateRange       ? `<div class="card-meta-item"><span class="icon">📅</span>${dateRange}</div>` : ''}
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-          ${ev[COLS.categoria]  ? `<span class="card-category">${ev[COLS.categoria]}</span>` : ''}
-          ${hasAtivacao         ? `<span class="ativacao-badge"><span class="star">⭐</span> Ativação</span>` : ''}
-        </div>
-        ${link ? `<a class="card-link" href="${link}" target="_blank" rel="noopener">Ver detalhes →</a>` : ''}
-      </div>`;
+    const status  = getStatus(ev);
+    const link    = ev[COLS.link] || '';
+    const clube   = ev[COLS.clube] || '';
+    const local   = ev[COLS.local] || '';
+    const cat     = ev[COLS.categoria] || '';
+    const hasAtiv = (ev[COLS.ativacao] || '').trim() !== '';
+    const dateRange = formatDateRange(ini, fim);
+    return [
+      '<div class="card' + (status === 'encerrado' ? ' card-expired' : '') + (hasAtiv ? ' has-ativacao' : '') + '">',
+      '  <div class="card-top">',
+      '    <div class="card-date"><span class="day">' + dayNum + '</span><span class="month-abbr">' + monAbbr + '</span></div>',
+      '    <span class="card-status ' + getStatusClass(status) + '">' + getStatusLabel(status) + '</span>',
+      '  </div>',
+      '  <div class="card-title">' + ev[COLS.nome] + '</div>',
+      '  <div class="card-meta">',
+      (clube ? '    <div class="card-meta-item"><span class="icon">🏟️</span>' + clube + '</div>' : ''),
+      (local ? '    <div class="card-meta-item"><span class="icon">📍</span>' + local + '</div>' : ''),
+      (dateRange ? '    <div class="card-meta-item"><span class="icon">📅</span>' + dateRange + '</div>' : ''),
+      '  </div>',
+      '  <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:2px;">',
+      (cat ? '    <span class="card-category">' + cat + '</span>' : ''),
+      (hasAtiv ? '    <span class="ativacao-badge"><span class="star">⭐</span> Ativação</span>' : ''),
+      '  </div>',
+      (link ? '  <a class="card-link" href="' + link + '" target="_blank" rel="noopener">Inscrever-se →</a>' : ''),
+      '</div>'
+    ].filter(Boolean).join('\n');
   }
 
-  /* ===== RENDER EVENTS — always show all 12 months ===== */
+  /* ===== RENDER ===== */
   function renderEvents(sport) {
     const s = state[sport];
-    const appEl = document.getElementById(CONFIG[sport].appId);
+    const appEl = document.getElementById('app-' + sport);
+    const year = new Date().getFullYear();
 
-    // Apply filters
     let filtered = s.events.filter(ev => {
-      // Status filter
       if (s.status !== 'todos') {
         if (s.status === 'ativacao') {
-          if ((ev[COLS.ativacao] || '').trim() === '') return false;
+          if (!(ev[COLS.ativacao] || '').trim()) return false;
         } else {
-          const eff = getEffectiveStatus(ev);
-          if (!eff.includes(s.status)) return false;
+          if (getStatus(ev) !== s.status) return false;
         }
       }
-      // Month filter
       if (s.month !== 'todos') {
-        const dataInicio = ev[COLS.dataInicio] || ev['Data'] || '';
-        const d = parseDate(dataInicio);
+        const d = parseDate(ev[COLS.dataInicio] || '');
         if (!d || (d.getMonth() + 1) !== parseInt(s.month)) return false;
       }
-      // Search
       if (s.search) {
         const q = s.search.toLowerCase();
         if (!Object.values(ev).some(v => v.toLowerCase().includes(q))) return false;
@@ -1224,41 +1315,22 @@
       return true;
     });
 
-    if (!s.events.length) {
-      appEl.innerHTML = '<div class="empty-state"><h3>Nenhum torneio encontrado</h3><p>Tente outro filtro ou busca.</p></div>';
-      return;
-    }
-
-    // Build 12-month structure
-    const currentYear = new Date().getFullYear();
-    let html = `<p class="results-count">${filtered.length} torneio${filtered.length !== 1 ? 's' : ''} encontrado${filtered.length !== 1 ? 's' : ''}</p>`;
-
-    // If filtering by month, show only that month
-    const monthsToShow = s.month !== 'todos'
-      ? [parseInt(s.month) - 1]
-      : Array.from({length: 12}, (_, i) => i);
+    const monthsToShow = s.month !== 'todos' ? [parseInt(s.month) - 1] : Array.from({length:12},(_,i)=>i);
+    let html = '<p class="results-count">' + filtered.length + ' evento' + (filtered.length !== 1 ? 's' : '') + ' encontrado' + (filtered.length !== 1 ? 's' : '') + '</p>';
 
     monthsToShow.forEach(mIdx => {
-      const monthEvents = filtered.filter(ev => {
-        const dataInicio = ev[COLS.dataInicio] || ev['Data'] || '';
-        const d = parseDate(dataInicio);
+      const mEvents = filtered.filter(ev => {
+        const d = parseDate(ev[COLS.dataInicio] || '');
         return d && d.getMonth() === mIdx;
       });
-
-      const monthLabel = `${MONTH_NAMES[mIdx]} ${currentYear}`;
-      const isEmpty = monthEvents.length === 0;
-
-      html += `
-        <div class="month-group${isEmpty ? ' month-empty' : ''}">
-          <div class="month-header">
-            <span class="month-name">${monthLabel}</span>
-            <span class="month-count">${isEmpty ? 'Sem eventos' : `${monthEvents.length} evento${monthEvents.length !== 1 ? 's' : ''}`}</span>
-          </div>
-          ${isEmpty
-            ? `<div class="month-placeholder">—</div>`
-            : `<div class="cards-grid">${monthEvents.map(renderCard).join('')}</div>`
-          }
-        </div>`;
+      const isEmpty = mEvents.length === 0;
+      html += '<div class="month-group' + (isEmpty ? ' month-empty' : '') + '">';
+      html += '<div class="month-header">';
+      html += '<span class="month-name">' + MONTH_NAMES[mIdx] + ' ' + year + '</span>';
+      html += '<span class="month-count">' + (isEmpty ? 'Sem eventos' : mEvents.length + ' evento' + (mEvents.length !== 1 ? 's' : '')) + '</span>';
+      html += '</div>';
+      html += isEmpty ? '<div class="month-placeholder">—</div>' : '<div class="cards-grid">' + mEvents.map(renderCard).join('') + '</div>';
+      html += '</div>';
     });
 
     appEl.innerHTML = html;
@@ -1268,57 +1340,64 @@
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const sport  = btn.dataset.sport;
-      const type   = btn.dataset.type;   // 'status' or 'month'
+      const type   = btn.dataset.type;
       const filter = btn.dataset.filter;
-
-      // Deactivate same-type buttons in same sport
-      document.querySelectorAll(`.filter-btn[data-type="${type}"][data-sport="${sport}"]`)
+      document.querySelectorAll('.filter-btn[data-type="' + type + '"][data-sport="' + sport + '"]')
         .forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-
       if (type === 'status') state[sport].status = filter;
       if (type === 'month')  state[sport].month  = filter;
-
       renderEvents(sport);
     });
   });
 
   /* ===== SEARCH ===== */
-  document.getElementById('search-tenis').addEventListener('input', e => {
-    state.tenis.search = e.target.value; renderEvents('tenis');
-  });
-  document.getElementById('search-beach').addEventListener('input', e => {
-    state.beach.search = e.target.value; renderEvents('beach');
+  ['tenis','beach','damas','cursos'].forEach(sport => {
+    const el = document.getElementById('search-' + sport);
+    if (el) el.addEventListener('input', e => { state[sport].search = e.target.value; renderEvents(sport); });
   });
 
   /* ===== LOAD DATA ===== */
-  async function loadData(sport) {
-    const cfg   = CONFIG[sport];
-    const appEl = document.getElementById(cfg.appId);
+  async function loadAllData() {
+    ['tenis','beach','damas','cursos'].forEach(sport => {
+      const el = document.getElementById('app-' + sport);
+      if (el) el.innerHTML = '<div class="loading"><div class="spinner"></div><span>Carregando...</span></div>';
+    });
+
     if (location.protocol === 'file:') {
-      appEl.innerHTML = '<div class="error-box"><h3>Abra pelo servidor</h3><p>Use GitHub Pages ou Live Server para testar.</p></div>';
+      document.getElementById('app-tenis').innerHTML = '<div class="error-box"><h3>Abra pelo servidor</h3><p>Use GitHub Pages ou Live Server.</p></div>';
       return;
     }
+
     try {
-      appEl.innerHTML = '<div class="loading"><div class="spinner"></div><span>Carregando calendário...</span></div>';
-      const res = await fetch(cfg.SHEET_URL, { mode: 'cors' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const res = await fetch(SHEET_URL, { mode: 'cors' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       const text = await res.text();
-      state[sport].events = parseCSV(text);
-      if (!state[sport].events.length) {
-        appEl.innerHTML = '<div class="error-box"><h3>Planilha vazia</h3><p>Verifique os cabeçalhos: <code>Torneio, Data Início, Data Fim, Local, Categoria, Status, Ativação, Link</code></p></div>';
-        return;
-      }
-      renderEvents(sport);
+      const rows = parseCSV(text);
+
+      // Clear state
+      Object.keys(state).forEach(k => state[k].events = []);
+
+      // Distribute rows into sports
+      rows.forEach(row => {
+        const sport = getSport(row[COLS.categoria]);
+        state[sport].events.push(row);
+      });
+
+      // Render all
+      ['tenis','beach','damas','cursos'].forEach(renderEvents);
+
     } catch (err) {
-      appEl.innerHTML = `<div class="error-box"><h3>Erro ao carregar</h3><p>${err.message}</p></div>`;
+      ['tenis','beach','damas','cursos'].forEach(sport => {
+        const el = document.getElementById('app-' + sport);
+        if (el) el.innerHTML = '<div class="error-box"><h3>Erro ao carregar</h3><p>' + err.message + '</p></div>';
+      });
     }
   }
 
-  loadData('tenis');
-  loadData('beach');
+  loadAllData();
   if (AUTO_REFRESH_MINUTES > 0) {
-    setInterval(() => { loadData('tenis'); loadData('beach'); }, AUTO_REFRESH_MINUTES * 60 * 1000);
+    setInterval(loadAllData, AUTO_REFRESH_MINUTES * 60 * 1000);
   }
 </script>
 </body>
