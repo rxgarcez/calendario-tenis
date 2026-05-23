@@ -4,6 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calendário Oficial 2026 — Federação Paulista de Tênis</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#002444">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Calendário FPT">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152x152.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192x192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512x512.png">
+
+<!-- SEO / Open Graph -->
+<meta name="description" content="Calendário oficial de torneios da Federação Paulista de Tênis — Tênis, Beach Tennis, Damas e Cursos.">
+<meta property="og:title" content="Calendário FPT 2026">
+<meta property="og:description" content="Todos os torneios oficiais do tênis paulista em um só lugar.">
+<meta property="og:image" content="icon-512x512.png">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -770,6 +790,44 @@
   /* ===== MOBILE ===== */
   .nav-links { display: flex; }
 
+  /* ===== PWA INSTALL BANNER ===== */
+  #install-banner {
+    display: none;
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    background: var(--primary);
+    color: white;
+    border-radius: 12px;
+    padding: 0.875rem 1.25rem;
+    box-shadow: 0 8px 32px rgba(0,36,68,0.35);
+    align-items: center;
+    gap: 1rem;
+    max-width: 380px;
+    width: calc(100% - 2rem);
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp {
+    from { opacity:0; transform: translateX(-50%) translateY(20px); }
+    to   { opacity:1; transform: translateX(-50%) translateY(0); }
+  }
+  #install-banner .banner-icon { width:44px; height:44px; border-radius:10px; flex-shrink:0; }
+  #install-banner .banner-text { flex:1; }
+  #install-banner .banner-text strong { display:block; font-size:13px; font-weight:700; margin-bottom:2px; }
+  #install-banner .banner-text span { font-size:11px; opacity:0.75; }
+  #install-banner .banner-btn {
+    background: var(--tertiary); color: white; border: none; border-radius: 8px;
+    padding: 8px 14px; font-family: 'Montserrat', sans-serif; font-size: 12px;
+    font-weight: 700; cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  }
+  #install-banner .banner-btn:hover { background: var(--tertiary-dark); }
+  #install-banner .banner-close {
+    background:none; border:none; color:rgba(255,255,255,0.5);
+    font-size:18px; cursor:pointer; padding:0; line-height:1; flex-shrink:0;
+  }
+
   @media (max-width: 720px) {
     .nav-links { display: none; }
     main, .filters { padding: 1.25rem; }
@@ -783,6 +841,17 @@
 <body>
 
 <!-- NAVBAR -->
+<!-- PWA Install Banner -->
+<div id="install-banner" role="dialog">
+  <img class="banner-icon" src="icon-192x192.png" alt="FPT">
+  <div class="banner-text">
+    <strong>Instalar Calendário FPT</strong>
+    <span>Adicione à tela inicial do seu celular</span>
+  </div>
+  <button class="banner-btn" onclick="installApp()">Instalar</button>
+  <button class="banner-close" onclick="this.parentElement.style.display='none'">✕</button>
+</div>
+
 <nav class="navbar" id="navbar">
   <div class="navbar-inner">
     <a href="#" class="nav-logo">
@@ -1399,6 +1468,41 @@
   if (AUTO_REFRESH_MINUTES > 0) {
     setInterval(loadAllData, AUTO_REFRESH_MINUTES * 60 * 1000);
   }
+</script>
+
+<!-- PWA Service Worker Registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/calendario-tenis/sw.js')
+        .then(reg => console.log('SW registrado:', reg.scope))
+        .catch(err => console.log('SW erro:', err));
+    });
+  }
+
+  // Install prompt — show "Adicionar à tela inicial" banner
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const banner = document.getElementById('install-banner');
+    if (banner) banner.style.display = 'flex';
+  });
+
+  function installApp() {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => {
+      deferredPrompt = null;
+      const banner = document.getElementById('install-banner');
+      if (banner) banner.style.display = 'none';
+    });
+  }
+
+  window.addEventListener('appinstalled', () => {
+    const banner = document.getElementById('install-banner');
+    if (banner) banner.style.display = 'none';
+  });
 </script>
 </body>
 </html>
