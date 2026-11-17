@@ -447,6 +447,61 @@
     main { padding: 12px 20px 56px; }
     .cards-grid { grid-template-columns: 1fr; }
   }
+
+  /* ===== PÁGINA SOBRE ===== */
+  .sobre-active .section-tabs { display: none; }
+
+  .about { max-width: 880px; margin: 0 auto; padding: 72px 24px 88px; scroll-margin-top: var(--nav-h); }
+  .about-kicker { font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .about-intro h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 600; letter-spacing: -.02em; line-height: 1.15; color: var(--primary); margin-bottom: 20px; }
+  .about-lead { font-size: 17px; font-weight: 300; line-height: 1.75; color: var(--ink); max-width: 720px; }
+
+  .timeline { margin: 56px 0 0; }
+  .tl-item { display: grid; grid-template-columns: 110px 1fr; gap: 24px; padding-bottom: 40px; }
+  .tl-year { font-size: 30px; font-weight: 600; letter-spacing: -.02em; line-height: 1.2; color: var(--primary); }
+  .tl-body { position: relative; padding: 0 0 0 28px; border-left: 2px solid var(--line); }
+  .tl-body::before { content: ''; position: absolute; left: -8px; top: 9px; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); border: 3px solid var(--secondary); }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item:last-child .tl-body { border-left-color: transparent; }
+  .tl-body h3 { font-size: 18px; font-weight: 600; color: var(--primary); margin-bottom: 8px; }
+  .tl-body p { font-size: 15px; font-weight: 300; line-height: 1.75; color: var(--ink); }
+  .tl-body p + p { margin-top: 10px; }
+
+  .about-block { margin-top: 64px; }
+  .about-block h3 { font-size: 22px; font-weight: 600; letter-spacing: -.01em; color: var(--primary); margin-bottom: 10px; }
+  .about-block > p { font-size: 15px; font-weight: 300; line-height: 1.75; color: var(--muted); max-width: 680px; margin-bottom: 20px; }
+  .about-sublabel { margin: 20px 0 10px; font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .about-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .about-chip { padding: 7px 14px; background: #fff; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; font-weight: 400; color: var(--primary); }
+
+  .pres-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+  .pres-item { padding: 16px 18px; background: #fff; border: 1px solid var(--line); border-radius: 12px; }
+  .pres-item strong { display: block; font-size: 15px; font-weight: 500; color: var(--primary); }
+  .pres-item span { font-size: 12px; font-weight: 300; color: var(--muted); }
+
+  .about-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+  .about-stat { padding: 22px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); }
+  .about-stat strong { display: block; font-size: 30px; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; color: var(--primary); margin-bottom: 6px; }
+  .about-stat span { font-size: 13px; font-weight: 300; line-height: 1.5; color: var(--muted); }
+
+  .about-cta { margin-top: 72px; padding: 44px 32px; text-align: center; background: var(--primary); color: #fff; border-radius: 20px; }
+  .about-cta h3 { font-size: 24px; font-weight: 600; letter-spacing: -.01em; margin-bottom: 10px; }
+  .about-cta p { max-width: 460px; margin: 0 auto 26px; font-size: 14px; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,.8); }
+  .btn-download { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; background: #fff; color: var(--primary); border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none; transition: transform .15s, box-shadow .15s; }
+  .btn-download:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(0,0,0,.25); }
+  .btn-download svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .about-cta .cta-alt { display: block; margin-top: 16px; font-size: 13px; font-weight: 300; color: rgba(255,255,255,.7); text-decoration: underline; text-underline-offset: 3px; }
+  .about-cta .cta-alt:hover { color: #fff; }
+
+  .about-source { margin-top: 28px; font-size: 12px; font-weight: 300; line-height: 1.6; color: var(--muted); text-align: center; }
+  .about-source a { color: var(--primary); }
+
+  @media (max-width: 720px) {
+    .about { padding: 48px 20px 64px; }
+    .tl-item { grid-template-columns: 1fr; gap: 6px; }
+    .tl-body { margin-left: 6px; }
+    .about-cta { padding: 36px 22px; }
+  }
 </style>
 </head>
 <body>
@@ -485,9 +540,9 @@
     <span class="hero-tag">Federação Paulista de Tênis</span>
     <h1>Calendário<br><em>Oficial</em> 2027</h1>
     <p class="hero-sub" id="hero-sub">Todos os torneios oficiais do tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.</p>
-    <a href="#calendario" class="hero-scroll">
+    <a href="#calendario" class="hero-scroll" id="hero-scroll">
       <span class="scroll-arrow">↓</span>
-      Ver torneios
+      <span id="hero-scroll-label">Ver torneios</span>
     </a>
   </div>
 </section>
@@ -668,8 +723,117 @@
   </main>
 </div>
 
+
+<!-- SOBRE A FPT -->
+<div class="section-view" id="view-sobre">
+  <div class="about" id="sobre-start">
+
+    <section class="about-intro">
+      <p class="about-kicker">Nossa história</p>
+      <h2>Mais de um século de tênis paulista</h2>
+      <p class="about-lead">A Federação Paulista de Tênis nasceu da união de clubes que já disputavam campeonatos entre si muito antes de existir uma entidade para organizá-los. Desde então, a FPT acompanha e impulsiona a difusão do tênis em São Paulo e o aperfeiçoamento de quem joga.</p>
+    </section>
+
+    <section class="timeline" aria-label="Linha do tempo da FPT">
+      <article class="tl-item">
+        <div class="tl-year">1916</div>
+        <div class="tl-body">
+          <h3>Os primeiros passos</h3>
+          <p>Em 4 de abril de 1916, a Associação Paulista de Esportes Atléticos (APEA), entidade à qual o tênis da capital estava ligado, instalou a sua Comissão de Lawn Tennis. Faziam parte dela Maércio P. Munhoz, que a presidia, João Didier, Gastão Rachou e Antonio Bayma, responsável por assinar a ata histórica.</p>
+          <p>Já nessa época havia campeonatos entre os clubes locais e confrontos contra representações de outros estados.</p>
+        </div>
+      </article>
+
+      <article class="tl-item">
+        <div class="tl-year">1924</div>
+        <div class="tl-body">
+          <h3>Nasce a Federação</h3>
+          <p>A data oficial de fundação é 6 de março de 1924. Em 2 de abril do mesmo ano, a Assembleia Geral Extraordinária reuniu diretores de dez clubes, entre eles Esperia, Paulistano e Tietê, na sede provisória da Rua São Bento, 51-A, sob a presidência de Maércio Munhoz, o primeiro presidente da FPT.</p>
+          <p>Naquele encontro, o E.C. Germânia, o Portugal Clube, o Santos Athletic Club e o Tennis Club de Campinas foram reconhecidos por unanimidade como sociedades fundadoras.</p>
+        </div>
+      </article>
+
+      <article class="tl-item">
+        <div class="tl-year">1936</div>
+        <div class="tl-body">
+          <h3>Filiação à Federação Brasileira de Tênis</h3>
+          <p>Na reunião de 18 de fevereiro de 1936, durante a gestão de Antonio Prado Jr., a diretoria aprovou por unanimidade a filiação da FPT à Federação Brasileira de Tênis. Os encontros aconteciam então na sede da Rua Quintino Bocaiúva, 59.</p>
+          <p>Foi nesse período que a entidade ganhou personalidade própria e adaptou os seus estatutos.</p>
+        </div>
+      </article>
+
+      <article class="tl-item">
+        <div class="tl-year">Hoje</div>
+        <div class="tl-body">
+          <h3>Tênis, beach tennis e inclusão</h3>
+          <p>A FPT segue promovendo competições de todas as idades e níveis, do tênis de base ao circuito profissional, além do beach tennis e do tênis em cadeira de rodas.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="about-block">
+      <h3>Clubes fundadores</h3>
+      <p>De acordo com o Estatuto, são considerados fundadores da FPT os clubes abaixo. Outros foram depois equiparados a essa categoria.</p>
+      <div class="about-chips">
+        <span class="about-chip">Clube Esperia</span>
+        <span class="about-chip">Esporte Clube Sírio</span>
+        <span class="about-chip">Club Athletico Paulistano</span>
+        <span class="about-chip">Clube Athletico São Paulo (dos Ingleses)</span>
+        <span class="about-chip">Esporte Clube Pinheiros</span>
+        <span class="about-chip">Tênis Clube de Campinas</span>
+      </div>
+      <p class="about-sublabel">Equiparados à categoria de fundadores</p>
+      <div class="about-chips">
+        <span class="about-chip">Clube Atlético Monte Líbano</span>
+        <span class="about-chip">Clube de Regatas Saldanha da Gama</span>
+        <span class="about-chip">Clube de Regatas Tietê</span>
+        <span class="about-chip">Tênis Clube de Santos</span>
+        <span class="about-chip">Sociedade Esportiva Palmeiras</span>
+        <span class="about-chip">Sociedade Harmonia de Tênis</span>
+        <span class="about-chip">Tênis Clube Paulista</span>
+        <span class="about-chip">São Paulo Futebol Clube</span>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <h3>Nomes que marcaram a história</h3>
+      <div class="pres-grid">
+        <div class="pres-item"><strong>Maércio Munhoz</strong><span>Primeiro presidente da FPT e fundador da Sociedade Harmonia de Tênis</span></div>
+        <div class="pres-item"><strong>Antonio Prado Jr.</strong><span>Presidente na filiação à Federação Brasileira de Tênis, em 1936</span></div>
+        <div class="pres-item"><strong>Ubirajara Martins</strong><span>Ex-presidente da FPT</span></div>
+        <div class="pres-item"><strong>Wanderley Checchia</strong><span>Presidiu a FPT e também a CBT</span></div>
+        <div class="pres-item"><strong>Milton Motta</strong><span>Ex-presidente da FPT</span></div>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <h3>A FPT em 2025</h3>
+      <p>Alguns números e marcos do último relatório administrativo da federação.</p>
+      <div class="about-stats">
+        <div class="about-stat"><strong>300+</strong><span>torneios com atuação da FPT no estado</span></div>
+        <div class="about-stat"><strong>1.543</strong><span>confrontos no Interclubes, o maior campeonato interclubes de tênis do Brasil</span></div>
+        <div class="about-stat"><strong>1º</strong><span>torneio ITF de tênis em cadeira de rodas organizado pela FPT</span></div>
+        <div class="about-stat"><strong>Kidslam</strong><span>torneio criado pela FPT para as categorias iniciais</span></div>
+      </div>
+    </section>
+
+    <section class="about-cta">
+      <h3>Conheça a FPT em detalhes</h3>
+      <p>Baixe a apresentação da Federação Paulista de Tênis e leve a nossa história com você.</p>
+      <a class="btn-download" href="https://drive.google.com/uc?export=download&id=1KRDFKRGv_znIemGlsvhAb3YIfXN9sEM_" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 20h16"/></svg>
+        Baixar apresentação
+      </a>
+      <a class="cta-alt" href="https://drive.google.com/file/d/1KRDFKRGv_znIemGlsvhAb3YIfXN9sEM_/view?usp=sharing" target="_blank" rel="noopener">Ou visualizar online</a>
+    </section>
+
+    <p class="about-source">Fontes: <a href="https://www.tenispaulista.com.br/nossa-historia/" target="_blank" rel="noopener">Nossa História — site oficial da FPT</a> e Relatório Administrativo, Financeiro e Técnico 2025.</p>
+
+  </div>
+</div>
+
 <footer>
-  <p>Dados atualizados automaticamente via Google Sheets &nbsp;·&nbsp; <a href="https://www.fptenis.com.br" target="_blank">fptenis.com.br</a></p>
+  <p>Dados atualizados automaticamente via Google Sheets &nbsp;·&nbsp; <a href="https://www.tenispaulista.com.br" target="_blank" rel="noopener">tenispaulista.com.br</a></p>
 </footer>
 
 <script>
@@ -712,6 +876,7 @@
     tenis:  { tag: 'Federação Paulista de Tênis',  title: 'Calendário<br><em>Oficial</em> 2027', sub: 'Todos os torneios oficiais do tênis paulista — acompanhe, planeje e inscreva-se.', tagClass: '' },
     beach:  { tag: 'Beach Tennis — FPT',            title: 'Calendário<br><em>Oficial</em> 2027', sub: 'Todos os torneios oficiais do beach tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.', tagClass: 'bt' },
     damas:  { tag: 'Damas — FPT',                  title: 'Calendário<br><em>Oficial</em> 2027', sub: 'Todos os torneios oficiais do tênis feminino paulista — acompanhe, planeje e inscreva-se.', tagClass: 'damas' },
+    sobre:  { tag: 'Sobre a FPT', title: 'Nossa<br><em>História</em>', sub: 'Mais de um século de clubes, campeonatos e gerações que construíram o tênis paulista.', tagClass: '', scrollLabel: 'Ler a história', scrollHref: '#sobre-start' },
     cursos: { tag: 'Cursos & Formações — FPT',      title: 'Calendário<br><em>Oficial</em> 2027', sub: 'Todos os cursos e formações oficiais da Federação Paulista de Tênis.', tagClass: 'cursos' }
   };
 
@@ -742,11 +907,13 @@
       const href = a.getAttribute('href');
       if (href === '#tenis')        { e.preventDefault(); switchSection('tenis');  scrollToCalendario(); }
       if (href === '#beach-tennis') { e.preventDefault(); switchSection('beach');  scrollToCalendario(); }
+      if (href === '#sobre')        { e.preventDefault(); switchSection('sobre');  scrollToCalendario(); }
     });
   });
 
   function scrollToCalendario() {
-    document.getElementById('calendario').scrollIntoView({ behavior: 'smooth' });
+    const id = activeSport === 'sobre' ? 'sobre-start' : 'calendario';
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
   }
 
   function switchSection(section) {
@@ -754,14 +921,17 @@
     document.querySelectorAll('.section-tab').forEach(t => t.classList.toggle('active', t.dataset.section === section));
     document.querySelectorAll('.section-view').forEach(v => v.classList.toggle('active', v.id === 'view-' + section));
     document.body.className = document.body.className
-      .replace(/\b(bt|damas|cursos)-active\b/g, '').trim();
+      .replace(/\b(bt|damas|cursos|sobre)-active\b/g, '').trim();
     if (section !== 'tenis') document.body.classList.add(section + '-active');
     const h = HERO[section];
     document.querySelector('.hero-tag').textContent = h.tag;
     document.querySelector('.hero-tag').className = 'hero-tag' + (h.tagClass ? ' ' + h.tagClass : '');
     document.querySelector('.hero h1').innerHTML = h.title;
     document.getElementById('hero-sub').textContent = h.sub;
-    const titles = { tenis: 'Calendário Tênis 2027 — FPT', beach: 'Calendário Beach Tennis 2027 — FPT', damas: 'Calendário Damas 2027 — FPT', cursos: 'Cursos 2027 — FPT' };
+    const hs = document.getElementById('hero-scroll');
+    hs.setAttribute('href', h.scrollHref || '#calendario');
+    document.getElementById('hero-scroll-label').textContent = h.scrollLabel || 'Ver torneios';
+    const titles = { tenis: 'Calendário Tênis 2027 — FPT', beach: 'Calendário Beach Tennis 2027 — FPT', damas: 'Calendário Damas 2027 — FPT', cursos: 'Cursos 2027 — FPT', sobre: 'Nossa História — Federação Paulista de Tênis' };
     document.title = titles[section];
   }
 
@@ -982,6 +1152,7 @@
   }
 
   loadAllData();
+  if (location.hash === '#sobre') switchSection('sobre');
   if (AUTO_REFRESH_MINUTES > 0) {
     setInterval(loadAllData, AUTO_REFRESH_MINUTES * 60 * 1000);
   }
