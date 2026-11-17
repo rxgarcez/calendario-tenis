@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calendário Oficial 2026 — Federação Paulista de Tênis</title>
+<title>Calendário Oficial 2027 — Federação Paulista de Tênis</title>
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
@@ -20,821 +20,432 @@
 
 <!-- SEO / Open Graph -->
 <meta name="description" content="Calendário oficial de torneios da Federação Paulista de Tênis — Tênis, Beach Tennis, Damas e Cursos.">
-<meta property="og:title" content="Calendário FPT 2026">
+<meta property="og:title" content="Calendário FPT 2027">
 <meta property="og:description" content="Todos os torneios oficiais do tênis paulista em um só lugar.">
 <meta property="og:image" content="icon-512x512.png">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
 <style>
+  /* ===== BASE ===== */
   :root {
     --primary: #002444;
-    --primary-light: #003a6e;
-    --primary-muted: rgba(0,36,68,0.12);
+    --primary-soft: #0a3a63;
     --secondary: #f4f8fb;
-    --tertiary: #b41e23;
-    --tertiary-light: #f5d0d1;
-    --tertiary-dark: #8a1518;
     --white: #ffffff;
-    --ink: #0d1b2a;
-    --muted: #5a6a7a;
-    --border: #d6e3ee;
-    /* Beach Tennis accent */
-    --bt-accent: #fd742f;
-    --bt-accent-light: #fff0e8;
-    --bt-accent-dark: #c4511a;
+    --ink: #0b1f33;
+    --muted: #5f7184;
+    --line: #e1e9f0;
+    --radius: 14px;
+    --nav-h: 68px;
+    --maxw: 1160px;
   }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  /* Cor de destaque muda conforme a aba ativa */
+  body {
+    --accent: #b41e23;
+    --accent-soft: color-mix(in srgb, var(--accent) 9%, #fff);
+    --accent-ink: color-mix(in srgb, var(--accent) 80%, #000);
+  }
+  body.bt-active     { --accent: #fd742f; }
+  body.damas-active  { --accent: #e040a0; }
+  body.cursos-active { --accent: #2fae93; }
 
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'Montserrat', sans-serif;
-    background: var(--secondary);
+    font-family: 'Lexend', system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
     color: var(--ink);
-    min-height: 100vh;
+    background: var(--secondary);
+    -webkit-font-smoothing: antialiased;
   }
+
+  button, input { font-family: inherit; }
 
   /* ===== NAVBAR ===== */
   .navbar {
     position: fixed;
     top: 0; left: 0; right: 0;
+    height: var(--nav-h);
     z-index: 100;
-    transition: background 0.3s, box-shadow 0.3s;
-    padding: 0 2rem;
+    transition: background .25s, box-shadow .25s;
   }
-
   .navbar.scrolled {
-    background: var(--white);
-    box-shadow: 0 2px 16px rgba(0,36,68,0.1);
+    background: rgba(255,255,255,.94);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 1px 0 var(--line);
   }
-
   .navbar-inner {
-    max-width: 1100px;
+    max-width: var(--maxw);
+    height: 100%;
     margin: 0 auto;
-    height: 72px;
+    padding: 0 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 2rem;
   }
+  .nav-logo { display: flex; align-items: center; }
+  .nav-logo img { height: 46px; width: auto; display: block; }
+  .nav-logo .logo-white { display: block; }
+  .nav-logo .logo-color { display: none; }
+  .navbar.scrolled .nav-logo .logo-white { display: none; }
+  .navbar.scrolled .nav-logo .logo-color { display: block; }
 
-  .nav-logo {
-    height: 38px;
-    width: auto;
-    flex-shrink: 0;
-  }
-
-  .nav-logo svg {
-    height: 38px;
-    width: auto;
-  }
-
-  /* Show white logo by default (on hero), color logo when scrolled */
-  .logo-white { display: block; }
-  .logo-color { display: none; }
-  .navbar.scrolled .logo-white { display: none; }
-  .navbar.scrolled .logo-color { display: block; }
-
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    list-style: none;
-  }
-
+  .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
   .nav-links a {
     font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,.85);
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .nav-links a:hover { color: #fff; }
+  .navbar.scrolled .nav-links a { color: var(--muted); }
+  .navbar.scrolled .nav-links a:hover { color: var(--primary); }
+
+  .nav-links a.nav-cta {
+    padding: 9px 18px;
+    border: 1px solid rgba(255,255,255,.45);
+    border-radius: 999px;
     font-weight: 500;
-    color: rgba(255,255,255,0.85);
-    text-decoration: none;
-    letter-spacing: 0.02em;
-    transition: color 0.15s;
+    color: #fff;
+    transition: background .15s, color .15s, border-color .15s;
   }
-
-  .nav-links a:hover { color: white; }
-
-  .navbar.scrolled .nav-links a {
-    color: var(--muted);
-  }
-
-  .navbar.scrolled .nav-links a:hover {
-    color: var(--primary);
-  }
-
-  .nav-cta {
-    border: 1.5px solid rgba(255,255,255,0.6);
-    border-radius: 100px;
-    padding: 8px 20px;
-    font-size: 13px;
-    font-weight: 600;
-    color: white !important;
-    text-decoration: none;
-    transition: all 0.15s;
-    white-space: nowrap;
-    letter-spacing: 0.02em;
-  }
-
-  .nav-cta:hover {
-    background: white;
-    color: var(--primary) !important;
-    border-color: white;
-  }
-
-  .navbar.scrolled .nav-cta {
-    border-color: var(--tertiary);
-    color: var(--tertiary) !important;
-    background: none;
-  }
-
-  .navbar.scrolled .nav-cta:hover {
-    background: var(--tertiary);
-    color: white !important;
-  }
+  .nav-links a.nav-cta:hover { background: #fff; color: var(--primary); border-color: #fff; }
+  .navbar.scrolled .nav-links a.nav-cta { color: var(--primary); border-color: var(--primary); }
+  .navbar.scrolled .nav-links a.nav-cta:hover { background: var(--primary); color: #fff; }
 
   /* ===== HERO ===== */
   .hero {
     position: relative;
-    height: 90vh;
-    min-height: 560px;
-    max-height: 820px;
-    overflow: hidden;
+    min-height: min(78vh, 680px);
     display: flex;
     align-items: flex-end;
+    color: #fff;
+    overflow: hidden;
+    background: var(--primary);
   }
-
   .hero-bg {
-    position: absolute;
-    inset: 0;
-    background-image: url('hero.jpg');
-    background-size: cover;
-    background-position: center 20%;
-    background-repeat: no-repeat;
+    position: absolute; inset: 0;
+    background: url('hero.jpg') center 25% / cover no-repeat;
   }
-
-  /* Gradient overlay — dark at bottom for text legibility */
   .hero-bg::after {
     content: '';
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background:
-      linear-gradient(to right, rgba(0,15,35,0.75) 0%, rgba(0,15,35,0.2) 55%, rgba(0,15,35,0.0) 100%),
-      linear-gradient(to bottom, rgba(0,15,35,0.3) 0%, rgba(0,15,35,0.0) 30%, rgba(0,15,35,0.65) 75%, rgba(0,15,35,0.92) 100%);
+      linear-gradient(90deg, rgba(0,36,68,.92) 0%, rgba(0,36,68,.55) 45%, rgba(0,36,68,.05) 100%),
+      linear-gradient(180deg, rgba(0,36,68,.45) 0%, transparent 30%);
   }
-
   .hero-content {
-    position: relative;
-    z-index: 1;
-    max-width: 1100px;
-    margin: 0 auto;
+    position: relative; z-index: 1;
     width: 100%;
-    padding: 0 2rem 4rem;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: calc(var(--nav-h) + 64px) 24px 72px;
   }
-
   .hero-tag {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    margin-bottom: 20px;
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
+    font-weight: 500;
+    letter-spacing: .12em;
     text-transform: uppercase;
-    color: white;
-    background: rgba(180,30,35,0.85);
-    padding: 5px 14px;
-    border-radius: 100px;
-    margin-bottom: 1.25rem;
+    color: rgba(255,255,255,.9);
   }
-
   .hero-tag::before {
     content: '';
-    width: 6px; height: 6px;
+    width: 8px; height: 8px;
     border-radius: 50%;
-    background: white;
-    flex-shrink: 0;
+    background: var(--accent);
   }
-
   .hero h1 {
-    font-size: clamp(2.8rem, 7vw, 5.5rem);
-    font-weight: 900;
-    color: white;
-    line-height: 1.0;
-    letter-spacing: -0.02em;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    max-width: 700px;
+    font-size: clamp(2.4rem, 6vw, 4.25rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    margin-bottom: 20px;
   }
-
-  .hero h1 em {
-    color: var(--tertiary);
-    font-style: italic;
-    font-weight: 900;
-  }
-
+  .hero h1 em { font-style: normal; font-weight: 300; }
   .hero-sub {
-    font-size: 15px;
-    font-weight: 400;
-    color: rgba(255,255,255,0.72);
-    max-width: 480px;
+    max-width: 520px;
+    font-size: 16px;
+    font-weight: 300;
     line-height: 1.6;
-    margin-bottom: 2rem;
+    color: rgba(255,255,255,.85);
+    margin-bottom: 32px;
   }
-
   .hero-scroll {
     display: inline-flex;
     align-items: center;
     gap: 10px;
+    padding: 12px 22px;
+    background: #fff;
+    color: var(--primary);
+    border-radius: 999px;
     font-size: 13px;
     font-weight: 500;
-    color: rgba(255,255,255,0.6);
     text-decoration: none;
-    transition: color 0.15s;
+    transition: transform .15s, box-shadow .15s;
   }
+  .hero-scroll:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+  .scroll-arrow { font-size: 14px; }
 
-  .hero-scroll:hover { color: white; }
-
-  .scroll-arrow {
-    width: 36px; height: 36px;
-    border: 1.5px solid rgba(255,255,255,0.35);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    animation: bounce 2s ease-in-out infinite;
-  }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(5px); }
-  }
-
-  /* ===== SPA SECTION TABS ===== */
+  /* ===== ABAS ===== */
   .section-tabs {
-    background: var(--primary);
-    display: flex;
-    justify-content: center;
-    gap: 0;
     position: sticky;
-    top: 0;
+    top: var(--nav-h);
     z-index: 50;
+    display: flex;
+    gap: 4px;
     overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0 max(24px, calc((100% - var(--maxw)) / 2 + 24px));
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+    scroll-margin-top: var(--nav-h);
   }
-
+  .section-tabs::-webkit-scrollbar { display: none; }
   .section-tab {
     flex: 0 0 auto;
-    padding: 0 1.75rem;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.45);
+    height: 54px;
+    padding: 0 18px;
     background: none;
     border: none;
-    border-bottom: 3px solid transparent;
+    border-bottom: 2px solid transparent;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--muted);
     cursor: pointer;
-    transition: all 0.2s;
     white-space: nowrap;
+    transition: color .15s, border-color .15s;
   }
+  .section-tab:hover { color: var(--primary); }
+  .section-tab.active { color: var(--primary); font-weight: 500; border-bottom-color: var(--accent); }
+  .tab-icon { display: none; }
 
-  .section-tab:hover { color: rgba(255,255,255,0.8); }
-  .section-tab.active { color: white; }
-  .section-tab[data-section="tenis"].active  { border-bottom-color: var(--tertiary); }
-  .section-tab[data-section="beach"].active  { border-bottom-color: var(--bt-accent); }
-  .section-tab[data-section="damas"].active  { border-bottom-color: #e040a0; }
-  .section-tab[data-section="cursos"].active { border-bottom-color: #34b89a; }
-
-  .tab-icon { font-size: 15px; line-height: 1; }
-
-  /* ===== SECTION VIEWS ===== */
   .section-view { display: none; }
   .section-view.active { display: block; }
 
-  /* ===== SPORT THEME OVERRIDES ===== */
-  /* Beach Tennis */
-  .bt-active .filter-btn.active              { background: var(--bt-accent); border-color: var(--bt-accent); }
-  .bt-active .filter-btn:hover               { border-color: var(--bt-accent); color: var(--bt-accent); }
-  .bt-active .filter-btn.ativacao-btn.active { background: var(--bt-accent); border-color: var(--bt-accent); }
-  .bt-active .search-wrap input:focus        { border-color: var(--bt-accent); }
-  .bt-active .card-date                      { background: var(--bt-accent); }
-  .bt-active .month-name                     { color: var(--bt-accent-dark); }
-  .bt-active .card-category                  { color: var(--bt-accent-dark); background: var(--bt-accent-light); }
-  .bt-active .card-link                      { color: var(--bt-accent-dark); }
-  .bt-active .card-link:hover                { color: var(--bt-accent); }
-  .bt-active .spinner                        { border-top-color: var(--bt-accent); }
-  .bt-active .ativacao-badge                 { color: var(--bt-accent-dark); background: var(--bt-accent-light); }
-  .bt-active .card.has-ativacao              { border-color: #fdb98a; }
-
-  /* Damas */
-  .damas-active .filter-btn.active              { background: #e040a0; border-color: #e040a0; }
-  .damas-active .filter-btn:hover               { border-color: #e040a0; color: #e040a0; }
-  .damas-active .filter-btn.ativacao-btn.active { background: #e040a0; border-color: #e040a0; }
-  .damas-active .search-wrap input:focus        { border-color: #e040a0; }
-  .damas-active .card-date                      { background: #e040a0; }
-  .damas-active .month-name                     { color: #9a1060; }
-  .damas-active .card-category                  { color: #9a1060; background: #fce4f4; }
-  .damas-active .card-link                      { color: #9a1060; }
-  .damas-active .card-link:hover                { color: #e040a0; }
-  .damas-active .spinner                        { border-top-color: #e040a0; }
-  .damas-active .ativacao-badge                 { color: #9a1060; background: #fce4f4; }
-  .damas-active .card.has-ativacao              { border-color: #f09ad0; }
-
-  /* Cursos */
-  .cursos-active .filter-btn.active              { background: #34b89a; border-color: #34b89a; }
-  .cursos-active .filter-btn:hover               { border-color: #34b89a; color: #34b89a; }
-  .cursos-active .filter-btn.ativacao-btn.active { background: #34b89a; border-color: #34b89a; }
-  .cursos-active .search-wrap input:focus        { border-color: #34b89a; }
-  .cursos-active .card-date                      { background: #34b89a; }
-  .cursos-active .month-name                     { color: #1a6e5a; }
-  .cursos-active .card-category                  { color: #1a6e5a; background: #d4f5ee; }
-  .cursos-active .card-link                      { color: #1a6e5a; }
-  .cursos-active .card-link:hover                { color: #34b89a; }
-  .cursos-active .spinner                        { border-top-color: #34b89a; }
-
-  /* Hero tag variants */
-  .hero-tag.bt     { background: rgba(253,116,47,0.85); }
-  .hero-tag.damas  { background: rgba(224,64,160,0.85); }
-  .hero-tag.cursos { background: rgba(52,184,154,0.85); }
-
   /* ===== FILTROS ===== */
-  .filters-wrap {
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-
   .filters {
-    max-width: 1100px;
+    max-width: var(--maxw);
     margin: 0 auto;
-    padding: 0.75rem 2rem;
+    padding: 28px 24px 8px;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 12px;
   }
-
-  .filter-row {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-  }
-
-  .filter-row:last-child {
-    padding-bottom: 0.25rem;
-  }
+  .filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .filter-row:nth-child(2) { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .filter-row:nth-child(2)::-webkit-scrollbar { display: none; }
 
   .filter-label {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    min-width: 56px;
-  }
-
-  .filter-btn {
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    padding: 4px 12px;
+    flex-shrink: 0;
+    width: 52px;
     font-size: 11px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .filter-btn {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 400;
     color: var(--muted);
     cursor: pointer;
-    transition: all 0.15s;
-    letter-spacing: 0.02em;
     white-space: nowrap;
+    transition: all .15s;
   }
+  .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .filter-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 500; }
+  .filter-btn.ativacao-btn.active { background: var(--accent); border-color: var(--accent); }
+  .filter-btn.month-btn { padding: 5px 12px; }
 
-  .filter-btn:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-  }
-
-  .filter-btn.active {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: white;
-  }
-
-  /* Month buttons — slightly smaller */
-  .filter-btn.month-btn {
-    padding: 3px 10px;
-    font-size: 10px;
-  }
-
-  /* Ativação button special color */
-  .filter-btn.ativacao-btn.active {
-    background: #6a35b4;
-    border-color: #6a35b4;
-  }
-  .filter-btn.ativacao-btn:hover {
-    border-color: #6a35b4;
-    color: #6a35b4;
-  }
-
-  .search-wrap {
-    margin-left: auto;
-    position: relative;
-  }
-
+  .search-wrap { margin-left: auto; }
   .search-wrap input {
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    padding: 5px 14px 5px 32px;
-    font-size: 11px;
-    font-family: 'Montserrat', sans-serif;
-    background: var(--secondary);
+    width: 220px;
+    padding: 8px 14px 8px 36px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235f7184' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") no-repeat 12px center;
+    font-size: 13px;
     color: var(--ink);
     outline: none;
-    width: 200px;
-    transition: border-color 0.15s, background 0.15s;
+    transition: border-color .15s;
   }
+  .search-wrap input:focus { border-color: var(--primary); }
 
-  .search-wrap input:focus {
-    border-color: var(--primary);
-    background: white;
-  }
+  /* ===== LISTAGEM ===== */
+  main { max-width: var(--maxw); margin: 0 auto; padding: 16px 24px 72px; }
 
-  .search-wrap::before {
-    content: '⌕';
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 15px;
-    color: var(--muted);
-    pointer-events: none;
-  }
+  .results-count { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
 
-  /* ===== MAIN ===== */
-  main {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 2.5rem 2rem;
-  }
-
-  /* ===== LOADING ===== */
-  .loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 5rem 2rem;
-    gap: 1rem;
-    color: var(--muted);
-    font-size: 14px;
-  }
-
-  .spinner {
-    width: 32px; height: 32px;
-    border: 2px solid var(--border);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ===== ERRO ===== */
-  .error-box {
-    background: #fff0f0;
-    border: 1px solid var(--tertiary-light);
-    border-radius: 12px;
-    padding: 2rem;
-    text-align: center;
-    margin: 2rem 0;
-  }
-
-  .error-box h3 { color: var(--tertiary-dark); margin-bottom: 0.5rem; font-weight: 700; }
-  .error-box p { color: var(--muted); font-size: 14px; }
-  .error-box code { background: var(--tertiary-light); padding: 2px 6px; border-radius: 4px; font-size: 12px; }
-
-  /* ===== MESES ===== */
-  .month-group { margin-bottom: 2.5rem; }
-
+  .month-group { margin-bottom: 40px; }
   .month-header {
     display: flex;
     align-items: baseline;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border);
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
   }
+  .month-name { font-size: 20px; font-weight: 600; letter-spacing: -.01em; color: var(--primary); }
+  .month-count { font-size: 12px; color: var(--muted); }
+  .month-group.month-empty { margin-bottom: 24px; }
+  .month-group.month-empty .month-header { border-bottom: none; margin-bottom: 0; opacity: .45; }
+  .month-placeholder { display: none; }
 
-  .month-name {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 1.3rem;
-    color: var(--primary);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  .month-count {
-    font-size: 12px;
-    color: var(--muted);
-    font-weight: 400;
-  }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
 
   /* ===== CARDS ===== */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
-  }
-
   .card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.25rem;
-    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    animation: fadeUp 0.3s ease both;
+    gap: 14px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition: box-shadow .2s, border-color .2s, transform .2s;
+    animation: fadeUp .3s ease both;
   }
+  .card:hover { box-shadow: 0 10px 28px rgba(0,36,68,.07); border-color: #cddae6; transform: translateY(-2px); }
+  .card.has-ativacao { border-color: color-mix(in srgb, var(--accent) 40%, #fff); }
+  .card.card-expired { opacity: .55; }
+  .card.card-expired:hover { opacity: .8; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
-  .card.card-expired {
-    opacity: 0.6;
-  }
-
-  .card.card-expired:hover {
-    opacity: 0.8;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,36,68,0.08);
-    border-color: #a0bcd4;
-  }
-
-  .card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .card-date {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: var(--primary);
-    color: white;
-    border-radius: 8px;
-    padding: 6px 10px;
-    min-width: 46px;
-    flex-shrink: 0;
-  }
-
-  .card-date .day {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 1.4rem;
-    line-height: 1;
-  }
-
-  .card-date .month-abbr {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    opacity: 0.7;
-  }
+  .card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .card-date { display: flex; align-items: baseline; gap: 6px; }
+  .card-date .day { font-size: 30px; font-weight: 600; line-height: 1; letter-spacing: -.02em; color: var(--primary); }
+  .card-date .month-abbr { font-size: 12px; font-weight: 500; letter-spacing: .08em; color: var(--accent); }
 
   .card-status {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    padding: 3px 9px;
-    border-radius: 100px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
   }
+  .card-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .status-confirmado { background: #e6f5ee; color: #1f7a4d; }
+  .status-encerrado  { background: #eef1f4; color: #6b7a89; }
+  .status-confirmar  { background: #fff4de; color: #9a6400; }
+  .status-cancelado  { background: #fde8e8; color: #b41e23; }
+  .status-default    { background: #eef1f4; color: #6b7a89; }
 
-  .status-aberto { background: #e3f5ea; color: #1a6a35; }
-  .status-confirmado { background: #e0eeff; color: #1a4a8a; }
-  .status-encerrado { background: #f0f0f0; color: #6a6a6a; }
-  .status-cancelado { background: var(--tertiary-light); color: var(--tertiary-dark); }
-  .status-confirmar { background: #fff6e0; color: #8a6200; }
-  .status-default { background: #f0f0f0; color: #6a6a6a; }
+  .card-title { font-size: 16px; font-weight: 500; line-height: 1.35; color: var(--ink); }
 
-  /* ===== ATIVAÇÃO STAR BADGE ===== */
-  .card.has-ativacao {
-    border-color: #c4a8f0;
+  .card-meta { display: flex; flex-direction: column; gap: 6px; }
+  .card-meta-item { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 300; color: var(--muted); }
+  .card-meta-item svg { width: 14px; height: 14px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  .card-category {
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--secondary);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--primary);
   }
-
   .ativacao-badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: #6a35b4;
-    background: #f0e8ff;
-    padding: 2px 8px;
-    border-radius: 100px;
-    align-self: flex-start;
-  }
-
-  .ativacao-badge .star {
+    padding: 3px 10px;
+    background: var(--accent-soft);
+    border-radius: 999px;
     font-size: 11px;
+    font-weight: 500;
+    color: var(--accent-ink);
   }
-
-  /* BT active ativação */
-  .bt-active .ativacao-badge {
-    color: var(--bt-accent-dark);
-    background: var(--bt-accent-light);
-  }
-  .bt-active .card.has-ativacao {
-    border-color: #fdb98a;
-  }
-  .bt-active .filter-btn.ativacao-btn.active {
-    background: var(--bt-accent);
-    border-color: var(--bt-accent);
-  }
-  .bt-active .filter-btn.ativacao-btn:hover {
-    border-color: var(--bt-accent);
-    color: var(--bt-accent);
-  }
-
-  .card-title {
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--ink);
-    line-height: 1.4;
-  }
-
-  .card-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .card-meta-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  .card-meta-item .icon {
-    font-size: 12px;
-    width: 16px;
-    text-align: center;
-    flex-shrink: 0;
-  }
-
-  .card-category {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--tertiary-dark);
-    background: var(--tertiary-light);
-    padding: 2px 8px;
-    border-radius: 100px;
-    align-self: flex-start;
-  }
+  .ativacao-badge .star { font-size: 10px; }
 
   .card-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--primary-light);
-    text-decoration: none;
-    padding: 4px 0;
-    border-top: 1px solid var(--border);
     margin-top: auto;
-    transition: color 0.15s;
-    letter-spacing: 0.02em;
-  }
-
-  .card-link:hover { color: var(--tertiary); }
-
-  /* ===== EMPTY ===== */
-  .empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-    color: var(--muted);
-  }
-
-  .empty-state h3 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 1.4rem;
-    color: var(--primary);
-    margin-bottom: 0.5rem;
-  }
-
-  /* ===== MONTH EMPTY STATE ===== */
-  .month-group.month-empty .month-header {
-    opacity: 0.4;
-  }
-
-  .month-placeholder {
-    font-size: 13px;
-    color: var(--border);
-    padding: 0.5rem 0 1.5rem;
-    font-weight: 500;
-  }
-
-  /* ===== RESULTS COUNT ===== */
-  .results-count {
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
     font-size: 13px;
     font-weight: 500;
-    color: var(--muted);
-    margin-bottom: 1.5rem;
+    color: var(--accent-ink);
+    text-decoration: none;
+    transition: color .15s;
   }
+  .card-link:hover { color: var(--primary); }
+
+  /* ===== ESTADOS ===== */
+  .loading { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 72px 0; color: var(--muted); font-size: 14px; }
+  .spinner { width: 28px; height: 28px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .error-box { margin: 32px 0; padding: 28px; text-align: center; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); }
+  .error-box h3 { font-size: 16px; font-weight: 500; margin-bottom: 6px; color: var(--primary); }
+  .error-box p { font-size: 13px; color: var(--muted); }
+  .error-box code { padding: 2px 6px; background: var(--secondary); border-radius: 4px; font-size: 12px; }
+  .empty-state { padding: 64px 0; text-align: center; color: var(--muted); }
+  .empty-state h3 { font-size: 18px; font-weight: 500; color: var(--primary); margin-bottom: 6px; }
 
   /* ===== FOOTER ===== */
-  footer {
-    background: var(--primary);
-    text-align: center;
-    padding: 2rem;
-    font-size: 12px;
-    color: rgba(255,255,255,0.45);
-    margin-top: 3rem;
-  }
+  footer { padding: 32px 24px; text-align: center; background: #fff; border-top: 1px solid var(--line); font-size: 12px; font-weight: 300; color: var(--muted); }
+  footer a { color: var(--primary); font-weight: 500; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
 
-  footer a {
-    color: rgba(255,255,255,0.7);
-    text-decoration: none;
-  }
-
-  footer a:hover { color: white; text-decoration: underline; }
-
-  /* ===== MOBILE ===== */
-  .nav-links { display: flex; }
-
-  /* ===== PWA INSTALL BANNER ===== */
+  /* ===== BANNER DE INSTALAÇÃO (PWA) ===== */
   #install-banner {
     display: none;
     position: fixed;
-    bottom: 1.5rem;
     left: 50%;
+    bottom: 20px;
     transform: translateX(-50%);
     z-index: 999;
-    background: var(--primary);
-    color: white;
-    border-radius: 12px;
-    padding: 0.875rem 1.25rem;
-    box-shadow: 0 8px 32px rgba(0,36,68,0.35);
+    width: calc(100% - 32px);
+    max-width: 400px;
     align-items: center;
-    gap: 1rem;
-    max-width: 380px;
-    width: calc(100% - 2rem);
-    animation: slideUp 0.3s ease;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 12px 36px rgba(0,36,68,.35);
   }
-  @keyframes slideUp {
-    from { opacity:0; transform: translateX(-50%) translateY(20px); }
-    to   { opacity:1; transform: translateX(-50%) translateY(0); }
-  }
-  #install-banner .banner-icon { width:44px; height:44px; border-radius:10px; flex-shrink:0; }
-  #install-banner .banner-text { flex:1; }
-  #install-banner .banner-text strong { display:block; font-size:13px; font-weight:700; margin-bottom:2px; }
-  #install-banner .banner-text span { font-size:11px; opacity:0.75; }
-  #install-banner .banner-btn {
-    background: var(--tertiary); color: white; border: none; border-radius: 8px;
-    padding: 8px 14px; font-family: 'Montserrat', sans-serif; font-size: 12px;
-    font-weight: 700; cursor: pointer; white-space: nowrap; flex-shrink: 0;
-  }
-  #install-banner .banner-btn:hover { background: var(--tertiary-dark); }
-  #install-banner .banner-close {
-    background:none; border:none; color:rgba(255,255,255,0.5);
-    font-size:18px; cursor:pointer; padding:0; line-height:1; flex-shrink:0;
-  }
+  #install-banner .banner-icon { width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0; }
+  #install-banner .banner-text { flex: 1; min-width: 0; }
+  #install-banner .banner-text strong { display: block; font-size: 13px; font-weight: 500; }
+  #install-banner .banner-text span { font-size: 11px; font-weight: 300; opacity: .75; }
+  #install-banner .banner-btn { flex-shrink: 0; padding: 8px 16px; background: #fff; color: var(--primary); border: none; border-radius: 999px; font-size: 12px; font-weight: 500; cursor: pointer; }
+  #install-banner .banner-close { flex-shrink: 0; background: none; border: none; color: rgba(255,255,255,.55); font-size: 16px; cursor: pointer; }
 
+  /* ===== RESPONSIVO ===== */
   @media (max-width: 720px) {
+    :root { --nav-h: 60px; }
     .nav-links { display: none; }
-    main, .filters { padding: 1.25rem; }
-    .cards-grid { grid-template-columns: 1fr; }
+    .nav-logo img { height: 40px; }
+    .hero { min-height: 520px; }
+    .hero-content { padding: calc(var(--nav-h) + 40px) 20px 48px; }
+    .hero-sub { font-size: 15px; }
+    .section-tab { padding: 0 14px; font-size: 13px; }
+    .filters { padding: 20px 20px 4px; }
+    .filter-label { width: 100%; }
+    .filter-row:nth-child(2) .filter-label { width: auto; margin-right: 4px; }
     .search-wrap { margin-left: 0; width: 100%; }
     .search-wrap input { width: 100%; }
-    .hero h1 { font-size: clamp(2.2rem, 10vw, 3.5rem); }
+    main { padding: 12px 20px 56px; }
+    .cards-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -854,120 +465,9 @@
 
 <nav class="navbar" id="navbar">
   <div class="navbar-inner">
-    <a href="#" class="nav-logo">
-      <span class="logo-white"><svg id="logo-white" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 358.59 224.18">
-  <defs>
-    <style>
-      .cls-1 {
-        fill: #fff;
-      }
-    </style>
-  </defs>
-  <g id="Layer_1" data-name="Layer 1">
-    <g>
-      <path class="cls-1" d="M152.59,113.93c0,7.58-1.41,14.84-4.11,21.44-.65,1.52-1.19,2.82-1.95,4.23-5.63-4.98-11.7-11.16-18.2-18.52-3.14-3.58-6.18-7.15-9.1-10.83,3.14-13,10.5-24.37,20.58-32.6,3.57,4.44,6.5,9.42,8.67,14.73,2.7,6.61,4.11,13.86,4.11,21.56M207.19,80.13c1.3-2.06,2.71-4.01,4.22-5.85-1.41-.97-2.81-1.84-4.22-2.6-8.67-4.87-18.63-7.58-29.36-7.58s-20.68,2.71-29.35,7.69c-1.41.76-2.81,1.62-4.22,2.49,1.51,1.84,2.92,3.79,4.22,5.85,6.17,9.75,9.75,21.34,9.75,33.79,0,10.61-2.6,20.58-7.26,29.35,10.29,8.23,19.17,12.24,26.86,12.24s16.47-4.12,26.75-12.24c-4.55-8.77-7.15-18.74-7.15-29.35,0-12.46,3.57-24.04,9.75-33.79M215.85,77.64c-3.58,4.33-6.5,9.31-8.66,14.62-2.71,6.72-4.22,13.97-4.22,21.66s1.52,14.84,4.22,21.55c.54,1.41,1.19,2.71,1.84,4.11,5.74-4.98,11.91-11.16,18.41-18.52,3.14-3.58,6.17-7.15,8.99-10.72-3.03-13.11-10.51-24.48-20.58-32.71"/>
-      <g>
-        <path class="cls-1" d="M272.16,41.51c-.06-1.19-.21-2.35-.44-3.47-.24-1.12-.56-2.21-.97-3.27-.41-1.06-.9-2.08-1.49-3.08-.58-1-1.25-1.96-1.99-2.9-1.23-1.54-2.7-3-4.4-4.37-1.69-1.37-3.62-2.66-5.78-3.86-2.16-1.2-4.54-2.31-7.16-3.33-2.61-1.02-5.45-1.96-8.52-2.81-3.81-1.07-7.99-1.99-12.53-2.79-4.53-.79-9.43-1.45-14.68-1.97-5.25-.52-10.86-.92-16.82-1.17-5.96-.26-12.28-.39-18.94-.39-12.01,0-22.85.43-32.55,1.29-9.69.86-18.24,2.15-25.63,3.87-7.4,1.72-13.65,3.87-18.76,6.46-5.11,2.59-9.07,5.62-11.89,9.09-.77.96-1.45,1.96-2.04,2.98-.58,1.02-1.07,2.07-1.47,3.15-.4,1.08-.7,2.19-.91,3.32-.21,1.14-.34,2.3-.37,3.49l-.02.89c-.01.58,0,1.17.02,1.77.03.6.07,1.2.14,1.82.07.61.16,1.23.27,1.86.11.63.24,1.26.39,1.9,1.14,4.54,2.55,9.1,4.23,13.66,1.68,4.58,3.63,9.16,5.84,13.75,2.22,4.6,4.71,9.21,7.47,13.83,2.77,4.63,5.81,9.26,9.11,13.89,2.34-7.08,5.75-13.65,10.02-19.52,4.25-5.84,9.37-11,15.14-15.27,5.76-4.26,12.19-7.64,19.08-9.95,6.89-2.31,14.26-3.56,21.91-3.56,7.26,0,14.26,1.12,20.83,3.2,6.57,2.08,12.73,5.12,18.31,8.97,5.59,3.85,10.6,8.52,14.88,13.84,4.29,5.33,7.84,11.33,10.47,17.82.18.37.34.75.5,1.12.16.38.3.75.44,1.13.14.38.28.76.42,1.16.14.39.28.78.43,1.19,3.32-4.68,6.36-9.34,9.13-13.99,2.76-4.64,5.25-9.27,7.45-13.88,2.21-4.6,4.14-9.18,5.8-13.75,1.66-4.56,3.04-9.1,4.16-13.61.16-.61.28-1.22.4-1.82.11-.6.2-1.19.28-1.78.07-.58.13-1.16.18-1.73.04-.57.07-1.13.08-1.69l-.04-1.44ZM148.34,18.94c0,.34,0,.69,0,1.04,0,.35,0,.69,0,1.03,0,.34,0,.68,0,1.01,0,.33,0,.68,0,1.02,0,.34,0,.69,0,1.04,0,.35,0,.69,0,1.04,0,.35,0,.69-.01,1.02-2.99.36-5.99.75-9,1.17-3.01.42-6.02.86-9.03,1.33-3.01.47-6.02.97-9.04,1.5-3.01.53-6.02,1.09-9.03,1.67-.23.03-.46.06-.69.1-.24.04-.47.09-.71.14-.24.05-.48.1-.71.15-.24.05-.46.11-.69.17-.34.06-.68.12-1.01.19-.33.07-.67.14-1,.22-.33.08-.66.16-.98.24-.32.08-.64.17-.95.25,0,.28-.01.57-.02.86,0,.29,0,.58-.02.88,0,.29-.01.59-.02.88,0,.29-.01.58-.02.86,1.8-.37,3.6-.74,5.39-1.11,1.79-.37,3.58-.73,5.36-1.09,1.78-.35,3.57-.7,5.36-1.02,1.79-.32,3.58-.63,5.38-.91,1.77-.31,3.54-.59,5.32-.86,1.78-.27,3.57-.52,5.35-.76,1.79-.24,3.58-.46,5.37-.67,1.79-.21,3.59-.41,5.38-.61,0,.61-.01,1.23-.01,1.86,0,.62-.01,1.25-.02,1.88,0,.63-.01,1.25-.02,1.88,0,.62-.01,1.24-.02,1.86-1.8.19-3.59.4-5.39.61-1.8.21-3.59.43-5.39.66-1.8.23-3.6.47-5.39.73-1.8.25-3.6.52-5.4.8-1.8.31-3.6.63-5.39.97-1.79.33-3.58.68-5.37,1.04-1.79.36-3.58.73-5.37,1.1-1.79.37-3.59.76-5.39,1.15,0,.31-.01.62-.02.93,0,.31-.01.61-.02.91,0,.3-.01.6-.02.89,0,.29-.01.58-.02.86,0,.36-.02.73-.02,1.09,0,.36-.01.73-.02,1.09,0,.36-.02.72-.02,1.07,0,.35-.01.7-.02,1.03,0,.37-.01.73-.02,1.1,0,.37-.02.73-.02,1.09,0,.36-.02.71-.02,1.07,0,.35-.01.7-.02,1.03-.68.17-1.36.34-2.04.51-.68.17-1.37.34-2.05.51-.69.17-1.38.34-2.08.51-.7.17-1.4.34-2.11.51.02-.65.03-1.31.05-1.97.01-.66.03-1.32.04-1.99.02-.66.03-1.32.04-1.98.02-.66.03-1.31.05-1.96.02-.62.03-1.23.04-1.84.01-.61.03-1.21.04-1.81.01-.6.03-1.19.04-1.78.01-.59.03-1.18.04-1.77,0-.39.02-.79.03-1.18,0-.39.02-.78.03-1.17.01-.39.02-.78.03-1.18,0-.39.02-.78.02-1.18,0-.42.02-.83.03-1.24,0-.4.02-.81.03-1.21,0-.4.01-.79.02-1.19,0-.39.02-.78.03-1.17.09-.45.23-.89.41-1.34.18-.45.4-.89.66-1.34.26-.45.57-.89.91-1.34.35-.44.73-.89,1.17-1.34.51-.5,1.04-.96,1.6-1.37.56-.42,1.14-.79,1.75-1.13.61-.33,1.24-.62,1.91-.87.67-.25,1.36-.46,2.09-.62,2.56-.53,5.1-1.04,7.66-1.52,2.55-.49,5.1-.95,7.65-1.39,2.55-.44,5.09-.87,7.64-1.27,2.54-.4,5.09-.78,7.63-1.14.84-.11,1.68-.22,2.52-.33.84-.11,1.68-.21,2.52-.32.84-.1,1.69-.2,2.55-.3.85-.1,1.71-.19,2.57-.27,0,.33,0,.67,0,1.01ZM204.83,31.05c-.11.58-.27,1.09-.48,1.55-.21.46-.48.86-.8,1.22-.32.35-.69.65-1.11.9-.37.22-.78.41-1.23.57-.45.16-.95.29-1.49.39-.55.1-1.12.17-1.75.22-.63.05-1.3.07-2.01.07-.1,0-.2,0-.3,0-.1,0-.21,0-.31,0-.1,0-.21,0-.31,0-.11,0-.21,0-.32-.01-1.26-.02-2.53-.05-3.81-.08-1.27-.03-2.55-.05-3.83-.07-1.28-.02-2.57-.04-3.85-.05-1.29-.01-2.58-.02-3.87-.02-1.43,0-2.86.01-4.29.04-1.43.02-2.86.06-4.29.09-1.43.04-2.86.08-4.29.11-1.43.04-2.86.07-4.29.1,0,.5,0,1,0,1.49,0,.49,0,.98,0,1.46,0,.48,0,.96,0,1.44,0,.48,0,.95,0,1.43v1.43c0,.48,0,.95-.01,1.43,0,.48,0,.95,0,1.43,0,.48,0,.95,0,1.43-.03.05-.05.11-.07.17-.02.05-.03.11-.04.17,0,.06-.01.11-.01.17,0,.05,0,.11,0,.17-.67.03-1.35.06-2.02.11-.68.04-1.35.09-2.03.14-.67.05-1.35.1-2.02.16-.68.05-1.35.11-2.02.17v-.17c0-.06,0-.11,0-.17v-.33c-.02-1.29-.03-2.59-.04-3.88,0-1.29,0-2.58,0-3.87,0-1.29,0-2.58.02-3.86,0-1.29.02-2.57.02-3.85,0-1.29.02-2.57.03-3.85.01-1.28.02-2.56.03-3.84,0-1.28.02-2.55.02-3.83.01-1.27.02-2.55.03-3.82.7-.05,1.39-.11,2.08-.17.68-.05,1.37-.11,2.05-.15.69-.05,1.37-.09,2.06-.13.69-.04,1.38-.07,2.08-.1.17-.03.33-.05.5-.07.17-.02.34-.03.5-.03.17,0,.33-.01.5-.01h.5c1.25-.06,2.51-.1,3.76-.14,1.26-.04,2.51-.08,3.76-.1,1.26-.03,2.51-.05,3.76-.07,1.25-.02,2.51-.02,3.76-.02s2.56,0,3.85.02c1.28.01,2.57.03,3.85.05,1.28.02,2.56.05,3.85.07,1.28.02,2.57.05,3.85.08.73.03,1.42.1,2.09.21.67.11,1.31.27,1.91.47.61.2,1.19.45,1.73.74.54.29,1.06.63,1.53,1.02.48.39.9.81,1.26,1.27.36.46.67.96.92,1.5.25.54.44,1.12.57,1.75.13.62.19,1.3.2,2.02,0,.28,0,.56,0,.85,0,.29,0,.59,0,.89,0,.3,0,.6,0,.9,0,.3,0,.61,0,.92,0,.7-.05,1.33-.15,1.9ZM256.43,33.86c-1.81-.42-3.63-.83-5.44-1.24-1.81-.4-3.63-.8-5.44-1.2-1.81-.39-3.61-.78-5.41-1.17.02.97.04,1.95.05,2.92.02.98.03,1.95.05,2.92.02.97.03,1.94.05,2.9.01.96.03,1.92.04,2.88.02.98.03,1.96.05,2.95.02.98.03,1.97.05,2.95.02.98.03,1.97.05,2.96.01.99.03,1.97.05,2.96-.68-.14-1.36-.28-2.03-.4-.68-.13-1.36-.25-2.03-.37-.68-.12-1.36-.24-2.03-.35-.68-.11-1.35-.23-2.03-.34-.02-.99-.03-1.97-.05-2.96-.01-.99-.03-1.97-.04-2.95-.02-.98-.03-1.97-.04-2.95-.02-.98-.03-1.96-.04-2.94-.01-.95-.03-1.92-.04-2.88-.02-.96-.03-1.93-.04-2.9-.02-.97-.03-1.94-.05-2.92-.01-.98-.03-1.95-.04-2.92-.79-.11-1.57-.22-2.34-.33-.77-.11-1.54-.22-2.3-.33-.76-.11-1.53-.22-2.28-.33-.76-.11-1.52-.23-2.27-.34-1.01-.14-2.02-.27-3.02-.4-1.01-.13-2.02-.25-3.02-.36-1.01-.12-2.02-.23-3.02-.34-1.01-.11-2.01-.23-3.02-.33,0-.36,0-.72,0-1.07,0-.35,0-.7-.01-1.05,0-.35,0-.69,0-1.04,0-.35,0-.7,0-1.06,0-.33,0-.67,0-1.02,0-.35,0-.69-.01-1.05,0-.35,0-.71,0-1.07,0-.36,0-.72-.01-1.08.84.11,1.67.22,2.51.32.84.1,1.68.2,2.53.29.84.1,1.69.19,2.54.29.86.1,1.71.2,2.58.31,2.54.39,5.09.79,7.63,1.21,2.54.42,5.09.86,7.64,1.31,2.55.46,5.1.94,7.65,1.44,2.55.5,5.1,1.03,7.66,1.58.84.22,1.69.45,2.54.67.85.22,1.71.44,2.57.66.86.21,1.71.43,2.57.63.85.21,1.7.41,2.55.6,0,.33.01.67.02,1.02,0,.34.01.69.03,1.04,0,.35.01.7.02,1.04.01.34.02.68.03,1.01.01.36.02.72.03,1.07,0,.35.01.7.02,1.04,0,.34.01.68.03,1.02,0,.34.01.67.02,1.01-1.8-.45-3.61-.88-5.42-1.3Z"/>
-        <path class="cls-1" d="M196.58,26.77c0-.3,0-.6,0-.89,0-.29,0-.58,0-.85-1.42-.05-2.86-.1-4.29-.14-1.44-.04-2.88-.08-4.32-.1-1.44-.03-2.88-.05-4.31-.06-1.44-.01-2.87-.02-4.29-.02s-2.85,0-4.27.02c-1.42.01-2.85.04-4.28.06-1.43.03-2.85.06-4.28.1-1.42.04-2.85.09-4.28.14,0,.31,0,.61,0,.91s0,.61,0,.9c0,.3,0,.59,0,.88,0,.29,0,.58,0,.86,1.42-.03,2.85-.06,4.28-.08,1.42-.03,2.85-.06,4.28-.09,1.43-.03,2.85-.05,4.28-.08,1.43-.03,2.85-.06,4.28-.08,1.42,0,2.86,0,4.3.02,1.44.01,2.87.04,4.31.06,1.44.03,2.88.06,4.32.11,1.44.04,2.87.09,4.29.14,0-.31,0-.61,0-.92,0-.3,0-.61,0-.9Z"/>
-      </g>
-      <path class="cls-1" d="M277.96,22.34c1.31,1.58,2.4,3.23,3.25,4.97.85,1.74,1.47,3.56,1.85,5.46.38,1.9.53,3.89.43,5.96-.09,2.07-.42,4.22-.99,6.46-1.61,6.43-3.75,12.89-6.43,19.37-2.68,6.51-5.89,13.05-9.65,19.62-3.77,6.59-8.07,13.21-12.91,19.86-4.86,6.67-10.27,13.37-16.22,20.1-5.97,6.69-11.69,12.57-17.13,17.63-5.46,5.07-10.64,9.3-15.55,12.7-4.92,3.4-9.56,5.96-13.92,7.67s-8.44,2.56-12.23,2.56-7.96-.85-12.35-2.56c-4.38-1.71-9.03-4.26-13.93-7.67-4.9-3.4-10.05-7.63-15.44-12.7-5.38-5.06-11.01-10.93-16.87-17.63-5.98-6.73-11.41-13.43-16.29-20.1-4.86-6.65-9.18-13.27-12.96-19.86-3.76-6.57-6.99-13.11-9.7-19.62-2.69-6.49-4.85-12.94-6.5-19.37-.54-2.21-.86-4.34-.95-6.39-.09-2.04.05-4.02.42-5.91.37-1.9.97-3.72,1.79-5.48.83-1.76,1.88-3.45,3.17-5.08,3.16-3.73,7.62-6.99,13.35-9.78,5.73-2.79,12.74-5.12,21.04-6.98,8.29-1.86,17.87-3.25,28.73-4.19,10.86-.93,23.01-1.4,36.46-1.4s25.65.47,36.53,1.4c10.88.93,20.46,2.33,28.74,4.19,8.29,1.86,15.29,4.19,20.99,6.98,5.71,2.79,10.12,6.05,13.23,9.78M277.78,46.79c.52-2.13.83-4.18.91-6.15.08-1.97-.06-3.85-.43-5.66-.36-1.81-.95-3.53-1.76-5.19-.81-1.65-1.84-3.23-3.1-4.73-2.97-3.57-7.17-6.69-12.62-9.36-5.44-2.67-12.12-4.89-20.03-6.66-7.9-1.77-17.05-3.1-27.43-3.99-10.38-.88-21.99-1.32-34.86-1.32s-24.43.44-34.79,1.32c-10.36.88-19.5,2.21-27.4,3.99-7.91,1.77-14.6,3.99-20.05,6.66-5.46,2.67-9.69,5.79-12.68,9.36-1.26,1.53-2.28,3.12-3.08,4.79-.8,1.66-1.37,3.4-1.72,5.2-.35,1.81-.48,3.69-.38,5.64.09,1.95.4,3.98.92,6.09,1.58,6.14,3.66,12.31,6.23,18.5,2.59,6.22,5.68,12.46,9.28,18.73,3.61,6.29,7.73,12.61,12.36,18.95,4.65,6.37,9.81,12.76,15.49,19.17,5.58,6.38,10.94,11.97,16.07,16.77,5.14,4.81,10.04,8.83,14.71,12.04,4.67,3.22,9.1,5.63,13.27,7.24,4.18,1.61,8.11,2.41,11.78,2.41s7.45-.8,11.59-2.41c4.14-1.61,8.55-4.02,13.24-7.24,4.68-3.21,9.63-7.22,14.84-12.04,5.21-4.8,10.67-10.39,16.39-16.77,5.68-6.41,10.84-12.8,15.48-19.17,4.63-6.34,8.74-12.66,12.35-18.95,3.59-6.27,6.67-12.52,9.24-18.73,2.56-6.2,4.62-12.36,6.17-18.5"/>
-      <polygon class="cls-1" points="0 215.54 0 188.61 11.47 188.61 11.47 192.23 4.23 192.23 4.23 199.65 9.53 199.65 9.53 203.39 4.23 203.39 4.23 215.54 0 215.54"/>
-      <polygon class="cls-1" points="13.89 215.54 13.89 188.61 24.54 188.61 24.54 192.23 17.87 192.23 17.87 199.69 23.09 199.69 23.09 203.36 17.87 203.36 17.87 211.92 25.16 211.92 25.16 215.54 13.89 215.54"/>
-      <path class="cls-1" d="M27.67,215.54v-26.93h4.24c3.19,0,5.37.55,6.56,1.66,1.19,1.1,1.78,3.07,1.78,5.91v12.04c0,2.55-.54,4.4-1.61,5.57-1.07,1.17-2.78,1.75-5.13,1.75h-5.84ZM31.65,212.03h1.13c1.23,0,2.11-.36,2.64-1.08.52-.72.78-1.96.78-3.72v-11.2c0-1.53-.25-2.57-.73-3.14-.49-.57-1.37-.84-2.66-.84h-1.16v19.98Z"/>
-      <polygon class="cls-1" points="44.47 215.54 44.47 188.61 55.12 188.61 55.12 192.23 48.45 192.23 48.45 199.69 53.67 199.69 53.67 203.36 48.45 203.36 48.45 211.92 55.74 211.92 55.74 215.54 44.47 215.54"/>
-      <path class="cls-1" d="M58.25,215.54v-26.93h4.4c3.13,0,5.27.57,6.44,1.7,1.16,1.13,1.74,3.19,1.74,6.16,0,1.82-.25,3.28-.75,4.39-.51,1.11-1.3,1.94-2.38,2.5l3.55,12.18h-4.11l-3.16-11.33h-1.75v11.33h-3.98ZM62.23,200.76h.96c1.36,0,2.3-.32,2.81-.96.51-.64.77-1.82.77-3.55,0-1.56-.24-2.65-.73-3.27-.49-.62-1.32-.93-2.51-.93h-1.31v8.71Z"/>
-      <path class="cls-1" d="M72.81,215.54l3.94-26.93h5.18l4.13,26.93h-4.05l-.67-5.44h-3.98l-.64,5.44h-3.91ZM77.72,206.52h3.24l-1.47-15.63h-.2l-1.56,15.63Z"/>
-      <path class="cls-1" d="M101.32,207.72c0,2.74-.55,4.82-1.64,6.23-1.1,1.41-2.71,2.11-4.83,2.11-2.29,0-3.94-.75-4.96-2.25-1.01-1.5-1.52-3.96-1.52-7.36v-8.74c0-3.41.51-5.86,1.52-7.35,1.01-1.5,2.67-2.25,4.96-2.25,2.12,0,3.73.7,4.83,2.11,1.09,1.41,1.64,3.46,1.64,6.15v1.35h-4.06v-2.13c0-1.42-.19-2.45-.58-3.09-.39-.64-1-.96-1.84-.96s-1.45.32-1.84.96c-.39.64-.58,1.67-.58,3.09v13c0,1.42.19,2.45.58,3.09.39.64,1,.96,1.84.96s1.45-.32,1.84-.96c.39-.64.58-1.67.58-3.09v-2.56h4.06v1.71ZM93.5,215.54h1.38v1.71h.24c1.24,0,2.15.29,2.75.86.59.58.89,1.46.89,2.65,0,1.08-.36,1.92-1.06,2.52s-1.71.9-2.99.9c-.67,0-1.33-.06-1.98-.18-.65-.12-1.31-.31-1.96-.56v-2.16c.79.27,1.49.46,2.11.59.62.13,1.16.19,1.62.19.58,0,1.04-.13,1.36-.38.33-.26.49-.61.49-1.06,0-.48-.18-.84-.53-1.05-.35-.22-.91-.33-1.67-.33-.06,0-.16,0-.3.02-.14.01-.25.02-.34.02v-3.73Z"/>
-      <path class="cls-1" d="M103.08,215.54l3.95-26.93h5.18l4.13,26.93h-4.05l-.67-5.44h-3.98l-.64,5.44h-3.91ZM112.43,180.92h1.45c-.23,1.39-.58,2.42-1.05,3.09-.48.67-1.09,1-1.86,1-.14,0-.28-.02-.44-.05-.16-.03-.33-.08-.52-.14l-1.24-.42c-.23-.08-.41-.14-.54-.17-.13-.03-.25-.04-.36-.04-.32,0-.59.1-.79.29-.2.19-.36.5-.48.93h-1.46c.19-1.32.52-2.31.99-2.98.47-.67,1.07-1,1.81-1,.18,0,.38.02.59.07.21.05.43.12.65.2l1.25.44s.09.03.16.05c.22.06.39.09.51.09.33,0,.61-.12.83-.35.23-.23.39-.57.48-1.02M107.99,206.52h3.24l-1.47-15.63h-.2l-1.57,15.63Z"/>
-      <path class="cls-1" d="M118.65,197.71c0-3.41.51-5.86,1.52-7.35,1.01-1.5,2.66-2.25,4.95-2.25s3.93.75,4.94,2.25c1.02,1.5,1.53,3.95,1.53,7.35v8.74c0,3.4-.51,5.86-1.53,7.36-1.01,1.5-2.66,2.25-4.94,2.25s-3.94-.75-4.95-2.25c-1.01-1.5-1.52-3.96-1.52-7.36v-8.74ZM122.7,195.58v13c0,1.42.19,2.45.58,3.09.38.64,1,.96,1.83.96s1.45-.32,1.83-.96c.39-.64.59-1.67.59-3.09v-13c0-1.42-.2-2.45-.59-3.09-.38-.64-1-.96-1.83-.96s-1.45.32-1.83.96c-.39.64-.58,1.67-.58,3.09"/>
-      <path class="cls-1" d="M143.26,215.54v-26.93h4.95c3.11,0,5.25.56,6.4,1.67,1.15,1.12,1.72,3.14,1.72,6.07s-.57,4.88-1.72,6.12c-1.14,1.24-3.02,1.86-5.62,1.86h-1.75v11.2h-3.98ZM147.24,200.87h1.31c1.41,0,2.38-.33,2.92-.98.54-.66.81-1.89.81-3.71,0-1.49-.27-2.55-.82-3.18-.55-.63-1.45-.95-2.73-.95h-1.49v8.82Z"/>
-      <path class="cls-1" d="M156.9,215.54l3.95-26.93h5.18l4.13,26.93h-4.06l-.67-5.44h-3.98l-.64,5.44h-3.91ZM161.8,206.52h3.24l-1.47-15.63h-.2l-1.56,15.63Z"/>
-      <path class="cls-1" d="M172.75,207.12v-18.51h3.98v19.6c0,1.48.17,2.54.52,3.17.35.64.92.95,1.71.95s1.36-.32,1.71-.95c.35-.64.53-1.69.53-3.17v-19.6h3.95v18.51c0,3.24-.48,5.53-1.43,6.88-.95,1.35-2.54,2.03-4.75,2.03s-3.82-.68-4.78-2.03c-.96-1.35-1.43-3.65-1.43-6.88"/>
-      <polygon class="cls-1" points="189.69 215.54 189.69 188.61 193.68 188.61 193.68 211.81 200.97 211.81 200.97 215.54 189.69 215.54"/>
-      <rect class="cls-1" x="203.13" y="188.61" width="3.98" height="26.93"/>
-      <path class="cls-1" d="M210.2,208.54l3.8-.56v.24c0,1.45.19,2.55.57,3.28.37.73.94,1.1,1.71,1.1.67,0,1.18-.26,1.54-.77.36-.52.54-1.25.54-2.21,0-.65-.12-1.3-.37-1.94-.25-.64-.64-1.32-1.16-2.04-.5-.67-1.35-1.72-2.54-3.15-1.2-1.44-2.01-2.53-2.42-3.28-.46-.85-.81-1.67-1.04-2.45-.23-.78-.35-1.53-.35-2.24,0-1.98.51-3.54,1.53-4.7,1.02-1.16,2.39-1.74,4.11-1.74s3.15.59,4.17,1.76c1.02,1.17,1.56,2.83,1.64,4.96l-3.6.45c-.06-1.28-.27-2.22-.62-2.81-.35-.59-.88-.88-1.58-.88-.52,0-.95.23-1.29.7-.34.47-.5,1.06-.5,1.79,0,.64.16,1.35.5,2.13.34.77.8,1.55,1.41,2.31.23.29.58.72,1.03,1.27,1.64,2.01,2.74,3.46,3.31,4.35.55.84.95,1.71,1.22,2.62.26.91.4,1.87.4,2.89,0,1.91-.55,3.46-1.65,4.66-1.11,1.2-2.53,1.8-4.27,1.8s-3.23-.65-4.28-1.94c-1.05-1.3-1.65-3.16-1.79-5.58"/>
-      <polygon class="cls-1" points="226.8 215.54 226.8 192.05 223.11 192.05 223.11 188.61 234.47 188.61 234.47 192.05 230.78 192.05 230.78 215.54 226.8 215.54"/>
-      <path class="cls-1" d="M235.51,215.54l3.94-26.93h5.18l4.13,26.93h-4.06l-.67-5.44h-3.98l-.63,5.44h-3.91ZM240.42,206.52h3.24l-1.47-15.63h-.2l-1.56,15.63Z"/>
-      <path class="cls-1" d="M258.78,215.54v-26.93h4.24c3.19,0,5.38.55,6.56,1.66,1.19,1.1,1.78,3.07,1.78,5.91v12.04c0,2.55-.53,4.4-1.61,5.57-1.07,1.17-2.79,1.75-5.14,1.75h-5.84ZM262.76,212.03h1.13c1.24,0,2.11-.36,2.64-1.08.52-.72.78-1.96.78-3.72v-11.2c0-1.53-.24-2.57-.73-3.14-.49-.57-1.37-.84-2.66-.84h-1.16v19.98Z"/>
-      <polygon class="cls-1" points="275.58 215.54 275.58 188.61 286.23 188.61 286.23 192.23 279.56 192.23 279.56 199.69 284.78 199.69 284.78 203.36 279.56 203.36 279.56 211.92 286.85 211.92 286.85 215.54 275.58 215.54"/>
-      <polygon class="cls-1" points="298.49 215.54 298.49 192.05 294.8 192.05 294.8 188.61 306.16 188.61 306.16 192.05 302.47 192.05 302.47 215.54 298.49 215.54"/>
-      <path class="cls-1" d="M308.76,215.54v-26.93h10.66v3.62h-6.68v7.45h5.22v3.67h-5.22v8.56h7.29v3.62h-11.27ZM312.52,179.76h3.13l2.76,6.33h-1.91l-2.42-3.8-2.42,3.8h-1.91l2.76-6.33Z"/>
-      <path class="cls-1" d="M322.5,215.54v-26.93h3.84l6.03,20.78c-.33-3.11-.57-6.24-.74-9.37-.16-3.13-.24-6.28-.24-9.43v-1.98h3.58v26.93h-3.34l-6.6-22.91c.32,3.66.56,7.4.73,11.21.17,3.81.27,7.71.31,11.7h-3.56Z"/>
-      <rect class="cls-1" x="339.52" y="188.61" width="3.98" height="26.93"/>
-      <path class="cls-1" d="M346.59,208.54l3.8-.56v.24c0,1.45.19,2.55.57,3.28.37.73.94,1.1,1.71,1.1.67,0,1.18-.26,1.55-.77.36-.52.54-1.25.54-2.21,0-.65-.12-1.3-.37-1.94-.25-.64-.63-1.32-1.15-2.04-.5-.67-1.35-1.72-2.55-3.15-1.2-1.44-2-2.53-2.42-3.28-.46-.85-.81-1.67-1.03-2.45-.23-.78-.34-1.53-.34-2.24,0-1.98.51-3.54,1.53-4.7,1.02-1.16,2.39-1.74,4.11-1.74s3.15.59,4.17,1.76c1.02,1.17,1.56,2.83,1.63,4.96l-3.6.45c-.06-1.28-.27-2.22-.62-2.81-.35-.59-.88-.88-1.58-.88-.52,0-.95.23-1.29.7-.34.47-.51,1.06-.51,1.79,0,.64.16,1.35.5,2.13.33.77.8,1.55,1.41,2.31.23.29.58.72,1.04,1.27,1.64,2.01,2.74,3.46,3.31,4.35.55.84.95,1.71,1.22,2.62.26.91.4,1.87.4,2.89,0,1.91-.55,3.46-1.65,4.66-1.11,1.2-2.53,1.8-4.28,1.8s-3.23-.65-4.28-1.94c-1.05-1.3-1.65-3.16-1.79-5.58"/>
-    </g>
-  </g>
-</svg></span>
-      <span class="logo-color"><svg id="logo-color" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 358.59 224.18">
-  <defs>
-    <style>
-      .cls-1 {
-        fill: #fff;
-      }
-
-      .cls-2 {
-        fill: #ce1627;
-      }
-
-      .cls-3 {
-        fill: none;
-      }
-
-      .cls-4 {
-        fill: #004b85;
-      }
-
-      .cls-5 {
-        fill: #fbb040;
-      }
-
-      .cls-6 {
-        clip-path: url(#clippath);
-      }
-
-      .cls-7 {
-        fill: #00467e;
-      }
-    </style>
-    <clipPath id="clippath">
-      <rect class="cls-3" width="358.59" height="224.18"/>
-    </clipPath>
-  </defs>
-  <g id="Layer_1" data-name="Layer 1">
-    <g class="cls-6">
-      <path class="cls-7" d="M178.45,8.1c6.67,0,12.98.13,18.94.39,5.96.26,11.56.65,16.82,1.17,5.25.53,10.14,1.18,14.68,1.97,4.54.8,8.72,1.72,12.53,2.79,3.06.85,5.9,1.78,8.52,2.81,2.61,1.02,5,2.13,7.16,3.33,2.16,1.2,4.09,2.49,5.78,3.86,1.7,1.37,3.17,2.83,4.4,4.37.74.94,1.41,1.9,1.99,2.9.58,1,1.07,2.02,1.49,3.08.41,1.06.73,2.15.97,3.27.24,1.12.39,2.28.44,3.47l.04,1.44c-.01.56-.04,1.12-.08,1.69-.04.57-.1,1.15-.18,1.73-.07.58-.17,1.18-.28,1.78-.11.6-.24,1.21-.4,1.82-1.11,4.52-2.5,9.06-4.16,13.61-1.66,4.57-3.59,9.15-5.8,13.75-2.21,4.61-4.69,9.24-7.45,13.88-2.77,4.65-5.81,9.32-9.13,13.99-.15-.4-.29-.8-.43-1.19-.14-.39-.28-.77-.42-1.16-.14-.38-.28-.76-.44-1.13-.15-.38-.31-.75-.5-1.12-2.63-6.49-6.18-12.49-10.47-17.82-4.28-5.32-9.29-9.98-14.88-13.84-5.58-3.85-11.74-6.89-18.31-8.97-6.57-2.08-13.56-3.2-20.83-3.2-7.66,0-15.02,1.25-21.91,3.56-6.9,2.32-13.32,5.7-19.08,9.95-5.78,4.27-10.89,9.42-15.14,15.27-4.27,5.87-7.67,12.44-10.02,19.52-3.31-4.63-6.34-9.26-9.11-13.89-2.76-4.61-5.25-9.22-7.47-13.83-2.22-4.59-4.16-9.17-5.84-13.75-1.68-4.56-3.09-9.12-4.23-13.66-.15-.64-.28-1.27-.39-1.9-.11-.63-.2-1.25-.27-1.86-.07-.61-.12-1.22-.14-1.82-.03-.6-.03-1.19-.02-1.77l.02-.89c.03-1.19.15-2.36.37-3.49.21-1.14.52-2.24.91-3.32.4-1.08.89-2.13,1.47-3.15.58-1.02,1.26-2.01,2.04-2.98,2.81-3.47,6.77-6.5,11.89-9.09,5.1-2.59,11.36-4.74,18.76-6.46,7.39-1.72,15.94-3.01,25.63-3.87,9.69-.86,20.54-1.29,32.55-1.29"/>
-      <path class="cls-5" d="M152.59,113.93c0,7.58-1.41,14.84-4.11,21.44-.65,1.52-1.19,2.82-1.95,4.23-5.63-4.98-11.7-11.16-18.2-18.52-3.14-3.58-6.18-7.15-9.1-10.83,3.14-13,10.5-24.37,20.58-32.6,3.57,4.44,6.5,9.42,8.67,14.73,2.7,6.61,4.11,13.86,4.11,21.56M207.19,80.13c1.3-2.06,2.71-4.01,4.22-5.85-1.41-.97-2.81-1.84-4.22-2.6-8.67-4.87-18.63-7.58-29.36-7.58s-20.68,2.71-29.35,7.69c-1.41.76-2.81,1.62-4.22,2.49,1.51,1.84,2.92,3.79,4.22,5.85,6.17,9.75,9.75,21.34,9.75,33.79,0,10.61-2.6,20.58-7.26,29.35,10.29,8.23,19.17,12.24,26.86,12.24s16.47-4.12,26.75-12.24c-4.55-8.77-7.15-18.74-7.15-29.35,0-12.46,3.57-24.04,9.75-33.79M215.85,77.64c-3.58,4.33-6.5,9.31-8.66,14.62-2.71,6.72-4.22,13.97-4.22,21.66s1.52,14.84,4.22,21.55c.54,1.41,1.19,2.71,1.84,4.11,5.74-4.98,11.91-11.16,18.41-18.52,3.14-3.58,6.17-7.15,8.99-10.72-3.03-13.11-10.51-24.48-20.58-32.71"/>
-      <path class="cls-1" d="M148.35,17.93c0,.33,0,.67,0,1.01,0,.34,0,.69,0,1.04,0,.35,0,.69,0,1.03,0,.34,0,.68,0,1.01,0,.33,0,.68,0,1.02,0,.34,0,.69,0,1.04,0,.35,0,.69,0,1.04,0,.35,0,.69-.01,1.02-2.99.36-5.99.75-9,1.17-3.01.42-6.02.86-9.03,1.33-3.01.47-6.02.97-9.04,1.5-3.01.53-6.02,1.09-9.03,1.67-.23.03-.46.06-.69.1-.24.04-.47.09-.71.14-.24.05-.48.1-.71.15-.24.05-.46.11-.69.17-.34.06-.68.12-1.01.19-.33.07-.67.14-1,.22-.33.08-.66.16-.98.24-.32.08-.64.17-.95.25,0,.28-.01.57-.02.86,0,.29,0,.58-.02.88,0,.29-.01.59-.02.88,0,.29-.01.58-.02.86,1.8-.37,3.6-.74,5.39-1.11,1.79-.37,3.58-.73,5.36-1.09,1.78-.35,3.57-.7,5.36-1.02,1.79-.32,3.58-.63,5.38-.91,1.77-.31,3.54-.59,5.32-.86,1.78-.27,3.57-.52,5.35-.76,1.79-.24,3.58-.46,5.37-.67,1.79-.21,3.59-.41,5.38-.61,0,.61-.01,1.23-.01,1.86,0,.62-.01,1.25-.02,1.88,0,.63-.01,1.25-.02,1.88,0,.62-.01,1.24-.02,1.86-1.8.19-3.59.4-5.39.61-1.8.21-3.59.43-5.39.66-1.8.23-3.6.47-5.39.73-1.8.25-3.6.52-5.4.8-1.8.31-3.6.63-5.39.97-1.79.33-3.58.68-5.37,1.04-1.79.36-3.58.73-5.37,1.1-1.79.37-3.59.76-5.39,1.15,0,.31-.01.62-.02.93,0,.31-.01.61-.02.91,0,.3-.01.6-.02.89,0,.29-.01.58-.02.86,0,.36-.02.73-.02,1.09,0,.36-.01.73-.02,1.09,0,.36-.02.72-.02,1.07,0,.35-.01.7-.02,1.03,0,.37-.01.73-.02,1.1,0,.37-.02.73-.02,1.09,0,.36-.02.71-.02,1.07,0,.35-.01.7-.02,1.03-.68.17-1.36.34-2.04.51-.68.17-1.37.34-2.05.51-.69.17-1.38.34-2.08.51-.7.17-1.4.34-2.11.51.02-.65.03-1.31.05-1.97.01-.66.03-1.32.04-1.99.02-.66.03-1.32.04-1.98.02-.66.03-1.31.05-1.96.02-.62.03-1.23.04-1.84.01-.61.03-1.21.04-1.81.01-.6.03-1.19.04-1.78.01-.59.03-1.18.04-1.77,0-.39.02-.79.03-1.18,0-.39.02-.78.03-1.17.01-.39.02-.78.03-1.18,0-.39.02-.78.02-1.18,0-.42.02-.83.03-1.24,0-.4.02-.81.03-1.21,0-.4.01-.79.02-1.19,0-.39.02-.78.03-1.17.09-.45.23-.89.41-1.34.18-.45.4-.89.66-1.34.26-.45.57-.89.91-1.34.35-.44.73-.89,1.17-1.34.51-.5,1.04-.96,1.6-1.37.56-.42,1.14-.79,1.75-1.13.61-.33,1.24-.62,1.91-.87.67-.25,1.36-.46,2.09-.62,2.56-.53,5.1-1.04,7.66-1.52,2.55-.49,5.1-.95,7.65-1.39,2.55-.44,5.09-.87,7.64-1.27,2.54-.4,5.09-.78,7.63-1.14.84-.11,1.68-.22,2.52-.33.84-.11,1.68-.21,2.52-.32.84-.1,1.69-.2,2.55-.3.86-.1,1.71-.19,2.57-.27"/>
-      <path class="cls-1" d="M210.7,17.6c.84.11,1.67.22,2.51.32.84.1,1.68.2,2.53.29.84.1,1.69.19,2.54.29.86.1,1.71.2,2.58.31,2.54.39,5.09.79,7.63,1.21,2.54.42,5.09.86,7.64,1.31,2.55.46,5.1.94,7.65,1.44,2.55.5,5.1,1.03,7.66,1.58.84.22,1.69.45,2.54.67.85.22,1.71.44,2.57.66.86.21,1.71.43,2.57.63.85.21,1.7.41,2.55.6,0,.33.01.67.02,1.02,0,.34.01.69.03,1.04,0,.35.01.7.02,1.04.01.34.02.68.03,1.01.01.36.02.72.03,1.07,0,.35.01.7.02,1.04,0,.34.01.68.03,1.02,0,.34.01.67.02,1.01-1.8-.45-3.61-.88-5.42-1.3-1.81-.42-3.63-.83-5.44-1.24-1.81-.4-3.63-.8-5.44-1.2-1.81-.39-3.61-.78-5.41-1.17.02.97.04,1.95.05,2.92.02.98.03,1.95.05,2.92.02.97.03,1.94.05,2.9.01.96.03,1.92.04,2.88.02.98.03,1.96.05,2.95.02.98.03,1.97.05,2.95.02.98.03,1.97.05,2.96.01.99.03,1.97.05,2.96-.68-.14-1.36-.28-2.03-.4-.68-.13-1.36-.25-2.03-.37-.68-.12-1.36-.24-2.03-.35-.68-.11-1.35-.23-2.03-.34-.02-.99-.03-1.97-.05-2.96-.01-.99-.03-1.97-.04-2.95-.02-.98-.03-1.97-.04-2.95-.02-.98-.03-1.96-.04-2.94-.01-.95-.03-1.92-.04-2.88-.02-.96-.03-1.93-.04-2.9-.02-.97-.03-1.94-.05-2.92-.01-.97-.03-1.95-.04-2.92-.79-.11-1.57-.22-2.34-.33-.77-.11-1.54-.22-2.3-.33-.76-.11-1.53-.22-2.28-.33-.76-.11-1.52-.23-2.27-.34-1.01-.14-2.02-.27-3.02-.4-1.01-.13-2.02-.25-3.02-.36-1.01-.12-2.02-.23-3.02-.34-1.01-.11-2.01-.23-3.02-.33,0-.36,0-.72,0-1.07,0-.35,0-.7-.01-1.05,0-.35,0-.69,0-1.04,0-.35,0-.7,0-1.06,0-.33,0-.67,0-1.02,0-.35,0-.69-.01-1.05,0-.35,0-.71,0-1.07,0-.36,0-.72-.01-1.08"/>
-      <path class="cls-1" d="M202.01,19.04c.48.39.9.81,1.26,1.27.36.46.67.96.92,1.5.25.54.44,1.12.57,1.75.13.62.19,1.3.2,2.02,0,.28,0,.56,0,.85,0,.29,0,.59,0,.89,0,.3,0,.6,0,.9,0,.3,0,.61,0,.92,0,.7-.05,1.33-.15,1.9-.11.58-.27,1.09-.48,1.55-.21.46-.48.86-.8,1.22-.32.35-.69.65-1.11.9-.37.22-.78.41-1.23.57-.45.16-.95.29-1.49.39-.55.1-1.12.17-1.75.22-.63.05-1.3.07-2.01.07-.1,0-.2,0-.3,0-.1,0-.21,0-.31,0-.1,0-.21,0-.31,0-.11,0-.21,0-.32-.01-1.26-.02-2.53-.05-3.81-.08-1.27-.03-2.55-.05-3.83-.07-1.28-.02-2.57-.04-3.85-.05-1.29-.01-2.58-.02-3.87-.02-1.43,0-2.86.01-4.29.04-1.43.02-2.86.06-4.29.09-1.43.04-2.86.08-4.29.11-1.43.04-2.86.07-4.29.1,0,.5,0,1,0,1.49,0,.49,0,.98,0,1.46,0,.48,0,.96,0,1.44,0,.48,0,.95,0,1.43v1.43c0,.48,0,.95-.01,1.43,0,.48,0,.95,0,1.43,0,.48,0,.95,0,1.43-.03.05-.05.11-.07.17-.02.05-.03.11-.04.17,0,.06-.01.11-.01.17,0,.05,0,.11,0,.17-.67.03-1.35.06-2.02.11-.68.04-1.35.09-2.03.14-.67.05-1.35.1-2.02.16-.68.05-1.35.11-2.02.17v-.17c0-.06,0-.11,0-.17v-.33c-.02-1.29-.03-2.59-.04-3.88,0-1.29,0-2.58,0-3.87,0-1.29,0-2.58.02-3.86,0-1.29.02-2.57.02-3.85,0-1.29.02-2.57.03-3.85.01-1.28.02-2.56.03-3.84,0-1.28.02-2.55.02-3.83.01-1.27.02-2.55.03-3.82.7-.05,1.39-.11,2.08-.17.68-.05,1.37-.11,2.05-.15.69-.05,1.37-.09,2.06-.13.69-.04,1.38-.07,2.08-.1.17-.03.33-.05.5-.07.17-.02.34-.03.5-.03.17,0,.33-.01.5-.01h.5c1.25-.06,2.51-.1,3.76-.14,1.26-.04,2.51-.08,3.76-.1,1.26-.03,2.51-.05,3.76-.07,1.25-.02,2.51-.02,3.76-.02s2.56,0,3.85.02c1.28.01,2.57.03,3.85.05,1.28.02,2.56.05,3.85.07,1.28.02,2.57.05,3.85.08.73.03,1.42.1,2.09.21.67.11,1.31.27,1.91.47.61.2,1.19.45,1.73.74.54.29,1.06.63,1.53,1.02M196.59,28.59c0-.31,0-.61,0-.92,0-.3,0-.61,0-.9s0-.6,0-.89c0-.29,0-.58,0-.85-1.42-.05-2.86-.1-4.29-.14-1.44-.04-2.88-.08-4.32-.1-1.44-.03-2.88-.05-4.31-.06-1.44-.01-2.87-.02-4.29-.02s-2.85,0-4.27.02c-1.43.01-2.85.04-4.28.06-1.43.03-2.85.06-4.28.1-1.43.04-2.85.09-4.28.14,0,.31,0,.61,0,.91s0,.61,0,.9c0,.3,0,.59,0,.88,0,.29,0,.58,0,.86,1.42-.03,2.85-.06,4.28-.08,1.43-.03,2.85-.06,4.28-.09,1.43-.03,2.85-.05,4.28-.08,1.43-.03,2.85-.06,4.28-.08,1.42,0,2.86,0,4.3.02s2.88.04,4.31.06c1.44.03,2.88.06,4.32.11,1.44.04,2.87.09,4.29.14"/>
-      <path class="cls-2" d="M277.96,22.34c1.31,1.58,2.4,3.23,3.25,4.97.85,1.74,1.47,3.56,1.85,5.46.38,1.9.53,3.89.43,5.96-.09,2.07-.42,4.22-.99,6.46-1.61,6.43-3.75,12.89-6.43,19.37-2.68,6.51-5.89,13.05-9.65,19.62-3.77,6.59-8.07,13.21-12.91,19.86-4.86,6.67-10.27,13.37-16.22,20.1-5.97,6.69-11.69,12.57-17.13,17.63-5.46,5.07-10.64,9.3-15.55,12.7-4.92,3.4-9.56,5.96-13.92,7.67s-8.44,2.56-12.23,2.56-7.96-.85-12.35-2.56c-4.38-1.71-9.03-4.26-13.93-7.67-4.9-3.4-10.05-7.63-15.44-12.7-5.38-5.06-11.01-10.93-16.87-17.63-5.98-6.73-11.41-13.43-16.29-20.1-4.86-6.65-9.18-13.27-12.96-19.86-3.76-6.57-6.99-13.11-9.7-19.62-2.69-6.49-4.85-12.94-6.5-19.37-.54-2.21-.86-4.34-.95-6.39-.09-2.04.05-4.02.42-5.91.37-1.9.97-3.72,1.79-5.48.83-1.76,1.88-3.45,3.17-5.08,3.16-3.73,7.62-6.99,13.35-9.78,5.73-2.79,12.74-5.12,21.04-6.98,8.29-1.86,17.87-3.25,28.73-4.19C152.88.47,165.03,0,178.48,0s25.65.47,36.53,1.4c10.88.93,20.46,2.33,28.74,4.19,8.29,1.86,15.29,4.19,20.99,6.98,5.71,2.79,10.12,6.05,13.23,9.78M277.78,46.79c.52-2.13.83-4.18.91-6.15.08-1.97-.06-3.85-.43-5.66-.36-1.81-.95-3.53-1.76-5.19-.81-1.65-1.84-3.23-3.1-4.73-2.97-3.57-7.17-6.69-12.62-9.36-5.44-2.67-12.12-4.89-20.03-6.66-7.9-1.77-17.05-3.1-27.43-3.99-10.38-.88-21.99-1.32-34.86-1.32s-24.43.44-34.79,1.32c-10.36.88-19.5,2.21-27.4,3.99-7.91,1.77-14.6,3.99-20.05,6.66-5.46,2.67-9.69,5.79-12.68,9.36-1.26,1.53-2.28,3.12-3.08,4.79-.8,1.66-1.37,3.4-1.72,5.2-.35,1.81-.48,3.69-.38,5.64.09,1.95.4,3.98.92,6.09,1.58,6.14,3.66,12.31,6.23,18.5,2.59,6.22,5.68,12.46,9.28,18.73,3.61,6.29,7.73,12.61,12.36,18.95,4.65,6.37,9.81,12.76,15.49,19.17,5.58,6.38,10.94,11.97,16.07,16.77,5.14,4.81,10.04,8.83,14.71,12.04,4.67,3.22,9.1,5.63,13.27,7.24,4.18,1.61,8.11,2.41,11.78,2.41s7.45-.8,11.59-2.41c4.14-1.61,8.55-4.02,13.24-7.24,4.68-3.21,9.63-7.22,14.84-12.04,5.21-4.8,10.67-10.39,16.39-16.77,5.68-6.41,10.84-12.8,15.48-19.17,4.63-6.34,8.74-12.66,12.35-18.95,3.59-6.27,6.67-12.52,9.24-18.73,2.56-6.2,4.62-12.36,6.17-18.5"/>
-      <polygon class="cls-4" points="0 215.54 0 188.61 11.47 188.61 11.47 192.23 4.23 192.23 4.23 199.65 9.53 199.65 9.53 203.4 4.23 203.4 4.23 215.54 0 215.54"/>
-      <polygon class="cls-4" points="13.89 215.54 13.89 188.61 24.54 188.61 24.54 192.23 17.87 192.23 17.87 199.69 23.09 199.69 23.09 203.36 17.87 203.36 17.87 211.92 25.16 211.92 25.16 215.54 13.89 215.54"/>
-      <path class="cls-4" d="M27.67,215.54v-26.93h4.24c3.19,0,5.37.55,6.56,1.66,1.19,1.1,1.78,3.07,1.78,5.91v12.04c0,2.55-.54,4.4-1.61,5.57-1.07,1.17-2.78,1.75-5.13,1.75h-5.84ZM31.65,212.03h1.13c1.23,0,2.11-.36,2.64-1.08.52-.72.78-1.96.78-3.72v-11.2c0-1.53-.25-2.57-.73-3.14-.49-.57-1.37-.84-2.66-.84h-1.16v19.98Z"/>
-      <polygon class="cls-4" points="44.47 215.54 44.47 188.61 55.12 188.61 55.12 192.23 48.45 192.23 48.45 199.69 53.67 199.69 53.67 203.36 48.45 203.36 48.45 211.92 55.74 211.92 55.74 215.54 44.47 215.54"/>
-      <path class="cls-4" d="M58.25,215.54v-26.93h4.4c3.13,0,5.27.57,6.44,1.7,1.16,1.13,1.74,3.19,1.74,6.16,0,1.82-.25,3.28-.75,4.39-.51,1.11-1.3,1.94-2.38,2.5l3.55,12.18h-4.11l-3.16-11.33h-1.75v11.33h-3.98ZM62.23,200.76h.96c1.36,0,2.3-.32,2.81-.96.51-.64.77-1.82.77-3.55,0-1.56-.24-2.65-.73-3.27-.49-.62-1.32-.93-2.51-.93h-1.31v8.71Z"/>
-      <path class="cls-4" d="M72.81,215.54l3.94-26.93h5.18l4.13,26.93h-4.05l-.67-5.44h-3.98l-.64,5.44h-3.91ZM77.72,206.52h3.24l-1.47-15.63h-.2l-1.56,15.63Z"/>
-      <path class="cls-4" d="M101.32,207.72c0,2.74-.55,4.82-1.64,6.23-1.1,1.41-2.71,2.11-4.83,2.11-2.29,0-3.94-.75-4.96-2.25-1.01-1.5-1.52-3.96-1.52-7.36v-8.74c0-3.41.51-5.86,1.52-7.35,1.01-1.5,2.67-2.25,4.96-2.25,2.12,0,3.73.7,4.83,2.11,1.09,1.41,1.64,3.46,1.64,6.15v1.35h-4.06v-2.13c0-1.42-.19-2.45-.58-3.09-.39-.64-1-.96-1.84-.96s-1.45.32-1.84.96c-.39.64-.58,1.67-.58,3.09v13c0,1.42.19,2.45.58,3.09.39.64,1,.96,1.84.96s1.45-.32,1.84-.96c.39-.64.58-1.67.58-3.09v-2.56h4.06v1.71ZM93.5,215.54h1.38v1.71h.24c1.24,0,2.15.29,2.75.86.59.58.89,1.46.89,2.65,0,1.08-.36,1.92-1.06,2.52s-1.71.9-2.99.9c-.67,0-1.33-.06-1.98-.18-.65-.12-1.31-.31-1.96-.56v-2.16c.79.27,1.49.46,2.11.59.62.13,1.16.19,1.62.19.58,0,1.04-.13,1.36-.38.33-.26.49-.61.49-1.06,0-.48-.18-.84-.53-1.05-.35-.22-.91-.33-1.67-.33-.06,0-.16,0-.3.02-.14.01-.25.02-.34.02v-3.73Z"/>
-      <path class="cls-4" d="M103.08,215.54l3.95-26.93h5.18l4.13,26.93h-4.05l-.67-5.44h-3.98l-.64,5.44h-3.91ZM112.43,180.93h1.45c-.23,1.39-.58,2.42-1.05,3.09-.48.67-1.09,1-1.86,1-.14,0-.28-.02-.44-.05-.16-.03-.33-.08-.52-.14l-1.24-.42c-.23-.08-.41-.14-.54-.17-.13-.03-.25-.04-.36-.04-.32,0-.59.1-.79.29-.2.19-.36.5-.48.93h-1.46c.19-1.32.52-2.31.99-2.98.47-.67,1.07-1,1.81-1,.18,0,.38.02.59.07.21.05.43.12.65.2l1.25.44s.09.03.16.05c.22.06.39.09.51.09.33,0,.61-.12.83-.35.23-.23.39-.57.48-1.02M107.99,206.52h3.24l-1.47-15.63h-.2l-1.57,15.63Z"/>
-      <path class="cls-4" d="M118.65,197.71c0-3.41.51-5.86,1.52-7.35,1.01-1.5,2.66-2.25,4.95-2.25s3.93.75,4.94,2.25c1.02,1.5,1.53,3.95,1.53,7.35v8.74c0,3.4-.51,5.86-1.53,7.36-1.01,1.5-2.66,2.25-4.94,2.25s-3.94-.75-4.95-2.25c-1.01-1.5-1.52-3.96-1.52-7.36v-8.74ZM122.7,195.58v13c0,1.42.19,2.45.58,3.09.38.64,1,.96,1.83.96s1.45-.32,1.83-.96c.39-.64.59-1.67.59-3.09v-13c0-1.42-.2-2.45-.59-3.09-.38-.64-1-.96-1.83-.96s-1.45.32-1.83.96c-.39.64-.58,1.67-.58,3.09"/>
-      <path class="cls-4" d="M143.26,215.54v-26.93h4.95c3.11,0,5.25.56,6.4,1.67,1.15,1.12,1.72,3.14,1.72,6.07s-.57,4.88-1.72,6.12c-1.14,1.24-3.02,1.86-5.62,1.86h-1.75v11.2h-3.98ZM147.24,200.87h1.31c1.41,0,2.38-.33,2.92-.98.54-.66.81-1.89.81-3.71,0-1.49-.27-2.55-.82-3.18-.55-.63-1.45-.95-2.73-.95h-1.49v8.82Z"/>
-      <path class="cls-4" d="M156.9,215.54l3.95-26.93h5.18l4.13,26.93h-4.06l-.67-5.44h-3.98l-.64,5.44h-3.91ZM161.8,206.52h3.24l-1.47-15.63h-.2l-1.56,15.63Z"/>
-      <path class="cls-4" d="M172.75,207.12v-18.51h3.98v19.6c0,1.48.17,2.54.52,3.17.35.64.92.95,1.71.95s1.36-.32,1.71-.95c.35-.64.53-1.69.53-3.17v-19.6h3.95v18.51c0,3.24-.48,5.53-1.43,6.88-.95,1.35-2.54,2.03-4.75,2.03s-3.82-.68-4.78-2.03c-.96-1.35-1.43-3.65-1.43-6.88"/>
-      <polygon class="cls-4" points="189.69 215.54 189.69 188.61 193.68 188.61 193.68 211.81 200.97 211.81 200.97 215.54 189.69 215.54"/>
-      <rect class="cls-4" x="203.13" y="188.61" width="3.98" height="26.93"/>
-      <path class="cls-4" d="M210.2,208.54l3.8-.56v.24c0,1.45.19,2.55.57,3.28.37.73.94,1.1,1.71,1.1.67,0,1.18-.26,1.54-.77.36-.52.54-1.25.54-2.21,0-.65-.12-1.3-.37-1.94-.25-.64-.64-1.32-1.16-2.04-.5-.67-1.35-1.72-2.54-3.15-1.2-1.44-2.01-2.53-2.42-3.28-.46-.85-.81-1.67-1.04-2.45-.23-.78-.35-1.53-.35-2.24,0-1.98.51-3.54,1.53-4.7,1.02-1.16,2.39-1.74,4.11-1.74s3.15.59,4.17,1.76c1.02,1.17,1.56,2.83,1.64,4.96l-3.6.45c-.06-1.28-.27-2.22-.62-2.81-.35-.59-.88-.88-1.58-.88-.52,0-.95.23-1.29.7-.34.47-.5,1.06-.5,1.79,0,.64.16,1.35.5,2.13.34.77.8,1.55,1.41,2.31.23.29.58.72,1.03,1.27,1.64,2.01,2.74,3.46,3.31,4.35.55.84.95,1.71,1.22,2.62.26.91.4,1.87.4,2.89,0,1.91-.55,3.46-1.65,4.66-1.11,1.2-2.53,1.8-4.27,1.8s-3.23-.65-4.28-1.94c-1.05-1.3-1.65-3.16-1.79-5.58"/>
-      <polygon class="cls-4" points="226.8 215.54 226.8 192.05 223.11 192.05 223.11 188.61 234.47 188.61 234.47 192.05 230.78 192.05 230.78 215.54 226.8 215.54"/>
-      <path class="cls-4" d="M235.51,215.54l3.94-26.93h5.18l4.13,26.93h-4.06l-.67-5.44h-3.98l-.63,5.44h-3.91ZM240.42,206.52h3.24l-1.47-15.63h-.2l-1.56,15.63Z"/>
-      <path class="cls-4" d="M258.78,215.54v-26.93h4.24c3.19,0,5.38.55,6.56,1.66,1.19,1.1,1.78,3.07,1.78,5.91v12.04c0,2.55-.53,4.4-1.61,5.57-1.07,1.17-2.79,1.75-5.14,1.75h-5.84ZM262.76,212.03h1.13c1.24,0,2.11-.36,2.64-1.08.52-.72.78-1.96.78-3.72v-11.2c0-1.53-.24-2.57-.73-3.14-.49-.57-1.37-.84-2.66-.84h-1.16v19.98Z"/>
-      <polygon class="cls-4" points="275.58 215.54 275.58 188.61 286.23 188.61 286.23 192.23 279.56 192.23 279.56 199.69 284.78 199.69 284.78 203.36 279.56 203.36 279.56 211.92 286.85 211.92 286.85 215.54 275.58 215.54"/>
-      <polygon class="cls-4" points="298.49 215.54 298.49 192.05 294.8 192.05 294.8 188.61 306.16 188.61 306.16 192.05 302.47 192.05 302.47 215.54 298.49 215.54"/>
-      <path class="cls-4" d="M308.76,215.54v-26.93h10.66v3.62h-6.68v7.45h5.22v3.67h-5.22v8.56h7.29v3.62h-11.27ZM312.52,179.76h3.13l2.76,6.33h-1.91l-2.42-3.8-2.42,3.8h-1.91l2.76-6.33Z"/>
-      <path class="cls-4" d="M322.5,215.54v-26.93h3.84l6.03,20.78c-.33-3.11-.57-6.24-.74-9.37-.16-3.13-.24-6.28-.24-9.43v-1.98h3.58v26.93h-3.34l-6.6-22.91c.32,3.66.56,7.4.73,11.21.17,3.81.27,7.71.31,11.7h-3.56Z"/>
-      <rect class="cls-4" x="339.52" y="188.61" width="3.98" height="26.93"/>
-      <path class="cls-4" d="M346.59,208.54l3.8-.56v.24c0,1.45.19,2.55.57,3.28.37.73.94,1.1,1.71,1.1.67,0,1.18-.26,1.55-.77.36-.52.54-1.25.54-2.21,0-.65-.12-1.3-.37-1.94-.25-.64-.63-1.32-1.15-2.04-.5-.67-1.35-1.72-2.55-3.15-1.2-1.44-2-2.53-2.42-3.28-.46-.85-.81-1.67-1.03-2.45-.23-.78-.34-1.53-.34-2.24,0-1.98.51-3.54,1.53-4.7,1.02-1.16,2.39-1.74,4.11-1.74s3.15.59,4.17,1.76c1.02,1.17,1.56,2.83,1.63,4.96l-3.6.45c-.06-1.28-.27-2.22-.62-2.81-.35-.59-.88-.88-1.58-.88-.52,0-.95.23-1.29.7-.34.47-.51,1.06-.51,1.79,0,.64.16,1.35.5,2.13.33.77.8,1.55,1.41,2.31.23.29.58.72,1.04,1.27,1.64,2.01,2.74,3.46,3.31,4.35.55.84.95,1.71,1.22,2.62.26.91.4,1.87.4,2.89,0,1.91-.55,3.46-1.65,4.66-1.11,1.2-2.53,1.8-4.28,1.8s-3.23-.65-4.28-1.94c-1.05-1.3-1.65-3.16-1.79-5.58"/>
-    </g>
-  </g>
-</svg></span>
+    <a href="#" class="nav-logo" aria-label="Federação Paulista de Tênis">
+      <img class="logo-white" src="logo-white.svg" alt="FPT">
+      <img class="logo-color" src="logo-color.svg" alt="FPT">
     </a>
     <ul class="nav-links">
       <li><a href="#tenis">Tênis</a></li>
@@ -983,7 +483,7 @@
   <div class="hero-bg"></div>
   <div class="hero-content">
     <span class="hero-tag">Federação Paulista de Tênis</span>
-    <h1>Calendário<br><em>Oficial</em> 2026</h1>
+    <h1>Calendário<br><em>Oficial</em> 2027</h1>
     <p class="hero-sub" id="hero-sub">Todos os torneios oficiais do tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.</p>
     <a href="#calendario" class="hero-scroll">
       <span class="scroll-arrow">↓</span>
@@ -995,16 +495,16 @@
 <!-- SECTION TABS -->
 <div class="section-tabs" id="calendario">
   <button class="section-tab active" data-section="tenis" id="tab-tenis">
-    <span class="tab-icon">&#127934;</span> Tênis
+    Tênis
   </button>
   <button class="section-tab" data-section="beach" id="tab-beach">
-    <span class="tab-icon">&#127958;</span> Beach Tennis
+    Beach Tennis
   </button>
   <button class="section-tab" data-section="damas" id="tab-damas">
-    <span class="tab-icon">&#128105;</span> Damas
+    Damas
   </button>
   <button class="section-tab" data-section="cursos" id="tab-cursos">
-    <span class="tab-icon">&#128218;</span> Cursos
+    Cursos
   </button>
 </div>
 
@@ -1177,6 +677,7 @@
   // Single sheet URL — all sports come from one spreadsheet
   const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR0qb_2USYFimuX_1vvu1BIiRhZ3IPlOFDN0dmVxvsixb2lgy40AcbOIYZQLcEs2A5JsGn9SDLudQMh/pub?output=csv';
   const AUTO_REFRESH_MINUTES = 15;
+  const CALENDAR_YEAR = 2027;   // ano exibido no calendário
 
   // Column names in the spreadsheet
   const COLS = {
@@ -1208,10 +709,10 @@
 
   // Hero content per sport
   const HERO = {
-    tenis:  { tag: 'Federação Paulista de Tênis',  title: 'Calendário<br><em>Oficial</em> 2026', sub: 'Todos os torneios oficiais do tênis paulista — acompanhe, planeje e inscreva-se.', tagClass: '' },
-    beach:  { tag: 'Beach Tennis — FPT',            title: 'Calendário<br><em>Oficial</em> 2026', sub: 'Todos os torneios oficiais do beach tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.', tagClass: 'bt' },
-    damas:  { tag: 'Damas — FPT',                  title: 'Calendário<br><em>Oficial</em> 2026', sub: 'Todos os torneios oficiais do tênis feminino paulista — acompanhe, planeje e inscreva-se.', tagClass: 'damas' },
-    cursos: { tag: 'Cursos & Formações — FPT',      title: 'Calendário<br><em>Oficial</em> 2026', sub: 'Todos os cursos e formações oficiais da Federação Paulista de Tênis.', tagClass: 'cursos' }
+    tenis:  { tag: 'Federação Paulista de Tênis',  title: 'Calendário<br><em>Oficial</em> 2027', sub: 'Todos os torneios oficiais do tênis paulista — acompanhe, planeje e inscreva-se.', tagClass: '' },
+    beach:  { tag: 'Beach Tennis — FPT',            title: 'Calendário<br><em>Oficial</em> 2027', sub: 'Todos os torneios oficiais do beach tênis paulista em um só lugar — acompanhe, planeje e inscreva-se.', tagClass: 'bt' },
+    damas:  { tag: 'Damas — FPT',                  title: 'Calendário<br><em>Oficial</em> 2027', sub: 'Todos os torneios oficiais do tênis feminino paulista — acompanhe, planeje e inscreva-se.', tagClass: 'damas' },
+    cursos: { tag: 'Cursos & Formações — FPT',      title: 'Calendário<br><em>Oficial</em> 2027', sub: 'Todos os cursos e formações oficiais da Federação Paulista de Tênis.', tagClass: 'cursos' }
   };
 
   const MONTH_NAMES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -1260,7 +761,7 @@
     document.querySelector('.hero-tag').className = 'hero-tag' + (h.tagClass ? ' ' + h.tagClass : '');
     document.querySelector('.hero h1').innerHTML = h.title;
     document.getElementById('hero-sub').textContent = h.sub;
-    const titles = { tenis: 'Calendário Tênis 2026 — FPT', beach: 'Calendário Beach Tennis 2026 — FPT', damas: 'Calendário Damas 2026 — FPT', cursos: 'Cursos 2026 — FPT' };
+    const titles = { tenis: 'Calendário Tênis 2027 — FPT', beach: 'Calendário Beach Tennis 2027 — FPT', damas: 'Calendário Damas 2027 — FPT', cursos: 'Cursos 2027 — FPT' };
     document.title = titles[section];
   }
 
@@ -1325,6 +826,10 @@
     return sd + ' ' + sm + ' – ' + ed + ' ' + em + ' ' + ey;
   }
 
+  const ICON_CLUB = '<svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>';
+  const ICON_PIN  = '<svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+  const ICON_CAL  = '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
+
   function renderCard(ev) {
     const ini = ev[COLS.dataInicio] || '';
     const fim = ev[COLS.dataFim] || '';
@@ -1346,9 +851,9 @@
       '  </div>',
       '  <div class="card-title">' + ev[COLS.nome] + '</div>',
       '  <div class="card-meta">',
-      (clube ? '    <div class="card-meta-item"><span class="icon">🏟️</span>' + clube + '</div>' : ''),
-      (local ? '    <div class="card-meta-item"><span class="icon">📍</span>' + local + '</div>' : ''),
-      (dateRange ? '    <div class="card-meta-item"><span class="icon">📅</span>' + dateRange + '</div>' : ''),
+      (clube ? '    <div class="card-meta-item">' + ICON_CLUB + '' + clube + '</div>' : ''),
+      (local ? '    <div class="card-meta-item">' + ICON_PIN + '' + local + '</div>' : ''),
+      (dateRange ? '    <div class="card-meta-item">' + ICON_CAL + '' + dateRange + '</div>' : ''),
       '  </div>',
       '  <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:2px;">',
       (cat ? '    <span class="card-category">' + cat + '</span>' : ''),
@@ -1363,7 +868,7 @@
   function renderEvents(sport) {
     const s = state[sport];
     const appEl = document.getElementById('app-' + sport);
-    const year = new Date().getFullYear();
+    const year = CALENDAR_YEAR;
 
     let filtered = s.events.filter(ev => {
       if (s.status !== 'todos') {
@@ -1401,6 +906,15 @@
       html += isEmpty ? '<div class="month-placeholder">—</div>' : '<div class="cards-grid">' + mEvents.map(renderCard).join('') + '</div>';
       html += '</div>';
     });
+
+    if (s.month === 'todos') {
+      const undated = filtered.filter(ev => !parseDate(ev[COLS.dataInicio] || ''));
+      if (undated.length) {
+        html += '<div class="month-group"><div class="month-header"><span class="month-name">Data a confirmar</span>'
+          + '<span class="month-count">' + undated.length + ' evento' + (undated.length !== 1 ? 's' : '') + '</span></div>'
+          + '<div class="cards-grid">' + undated.map(renderCard).join('') + '</div></div>';
+      }
+    }
 
     appEl.innerHTML = html;
   }
@@ -1442,7 +956,10 @@
       const res = await fetch(SHEET_URL, { mode: 'cors' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const text = await res.text();
-      const rows = parseCSV(text);
+      const rows = parseCSV(text).filter(r => {
+        const d = parseDate(r[COLS.dataInicio] || '');
+        return !d || d.getFullYear() === CALENDAR_YEAR;
+      });
 
       // Clear state
       Object.keys(state).forEach(k => state[k].events = []);

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fpt-calendario-v1';
+const CACHE_NAME = 'fpt-calendario-v2027-1';
 const ASSETS = [
   '/calendario-tenis/',
   '/calendario-tenis/index.html',
@@ -52,17 +52,17 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // All other assets — cache first, fallback to network
+  // Arquivos do próprio site (index, logos, hero...) — rede primeiro, cache como reserva.
+  // Assim, trocar um arquivo no GitHub (ex.: logo-color.svg) aparece para todo mundo sem mexer aqui.
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(res => {
+    fetch(e.request)
+      .then(res => {
         if (res && res.status === 200) {
           const clone = res.clone();
           caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
         }
         return res;
-      });
-    })
+      })
+      .catch(() => caches.match(e.request))
   );
 });
