@@ -139,14 +139,15 @@
     position: absolute; inset: 0;
     background:
       linear-gradient(90deg, rgba(0,36,68,.92) 0%, rgba(0,36,68,.55) 45%, rgba(0,36,68,.05) 100%),
-      linear-gradient(180deg, rgba(0,36,68,.45) 0%, transparent 30%);
+      linear-gradient(180deg, rgba(0,36,68,.45) 0%, transparent 30%),
+      linear-gradient(0deg, rgba(0,36,68,.82) 0%, rgba(0,36,68,.45) 22%, transparent 48%);
   }
   .hero-content {
     position: relative; z-index: 1;
     width: 100%;
     max-width: var(--maxw);
     margin: 0 auto;
-    padding: calc(var(--nav-h) + 64px) 24px 72px;
+    padding: calc(var(--nav-h) + 64px) 24px 44px;
   }
   .hero-tag {
     display: inline-flex;
@@ -436,7 +437,7 @@
     .nav-links { display: none; }
     .nav-logo img { height: 40px; }
     .hero { min-height: 520px; }
-    .hero-content { padding: calc(var(--nav-h) + 40px) 20px 48px; }
+    .hero-content { padding: calc(var(--nav-h) + 40px) 20px 32px; }
     .hero-sub { font-size: 15px; }
     .section-tab { padding: 0 14px; font-size: 13px; }
     .filters { padding: 20px 20px 4px; }
@@ -502,6 +503,42 @@
     .tl-body { margin-left: 6px; }
     .about-cta { padding: 36px 22px; }
   }
+
+  /* ===== RÉGUA DE PATROCINADORES (HERO) ===== */
+  .sponsors { margin-top: 56px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.22); }
+  .sponsors[hidden] { display: none; }
+  .sponsors-label { margin-bottom: 22px; font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.65); }
+  .sponsors-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    max-width: calc(var(--n, 6) * 190px);   /* mantém a mesma densidade com 3 ou 6 logos */
+  }
+  .sponsor {
+    flex: 0 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: sponsorIn .4s ease both;
+  }
+  .sponsor img {
+    display: block;
+    width: calc(128px * var(--s, 1));
+    max-width: 100%;
+    height: auto;
+    filter: brightness(0) invert(1);   /* versão monocromática branca, uniforme sobre a foto */
+    opacity: .85;
+    transition: opacity .2s;
+  }
+  .sponsor img:hover { opacity: 1; }
+  @keyframes sponsorIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  @media (max-width: 720px) {
+    .sponsors { margin-top: 40px; padding-top: 20px; }
+    .sponsors-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px 16px; max-width: none; }
+    .sponsor img { width: calc(92px * var(--s, 1)); }
+  }
 </style>
 </head>
 <body>
@@ -544,6 +581,11 @@
       <span class="scroll-arrow">↓</span>
       <span id="hero-scroll-label">Ver torneios</span>
     </a>
+
+    <div class="sponsors" id="sponsors" aria-label="Patrocinadores">
+      <p class="sponsors-label">Patrocinadores</p>
+      <div class="sponsors-row" id="sponsors-row"></div>
+    </div>
   </div>
 </section>
 
@@ -880,6 +922,40 @@
     cursos: { tag: 'Cursos & Formações — FPT',      title: 'Calendário<br><em>Oficial</em> 2027', sub: 'Todos os cursos e formações oficiais da Federação Paulista de Tênis.', tagClass: 'cursos' }
   };
 
+  // Patrocinadores por aba (arquivos em /patrocinadores/<id>.svg)
+  const SPONSORS = {
+    tenis:  ['dunlop', 'playpiso', 'unicesumar', 'onodera', 'supermercadosmambo', 'pantextil'],
+    beach:  ['heroe_s', 'playpiso', 'supermercadosmambo', 'unicesumar', 'epic', 'joog'],
+    damas:  ['dunlop', 'playpiso', 'onodera', 'supermercadosmambo', 'pantextil', 'unicesumar'],
+    cursos: ['dunlop', 'playpiso', 'unicesumar'],
+    sobre:  []
+  };
+  // name = texto alternativo | s = escala para equilibrar o peso visual entre as logos
+  const SPONSOR_INFO = {
+    dunlop:             { name: 'Dunlop',              s: 1 },
+    playpiso:           { name: 'Playpiso',            s: 1 },
+    unicesumar:         { name: 'Unicesumar',          s: 1 },
+    onodera:            { name: 'Onodera Estética',    s: 1 },
+    supermercadosmambo: { name: 'Supermercados Mambo', s: 1 },
+    pantextil:          { name: 'Pantextil',           s: 0.92 },
+    heroe_s:            { name: "Heroe's",             s: 0.95 },
+    epic:               { name: 'Epic Sport',          s: 0.9 },
+    joog:               { name: 'Joog',                s: 0.8 }
+  };
+
+  function renderSponsors(section) {
+    const box = document.getElementById('sponsors');
+    const row = document.getElementById('sponsors-row');
+    const list = SPONSORS[section] || [];
+    box.hidden = list.length === 0;
+    row.style.setProperty('--n', list.length || 1);
+    row.innerHTML = list.map((id, i) => {
+      const info = SPONSOR_INFO[id] || { name: id, s: 1 };
+      return '<div class="sponsor" style="animation-delay:' + (i * 45) + 'ms">'
+           + '<img src="patrocinadores/' + id + '.svg" alt="' + info.name + '" style="--s:' + info.s + '"></div>';
+    }).join('');
+  }
+
   const MONTH_NAMES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   const MONTH_ABBR  = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
 
@@ -928,6 +1004,7 @@
     document.querySelector('.hero-tag').className = 'hero-tag' + (h.tagClass ? ' ' + h.tagClass : '');
     document.querySelector('.hero h1').innerHTML = h.title;
     document.getElementById('hero-sub').textContent = h.sub;
+    renderSponsors(section);
     const hs = document.getElementById('hero-scroll');
     hs.setAttribute('href', h.scrollHref || '#calendario');
     document.getElementById('hero-scroll-label').textContent = h.scrollLabel || 'Ver torneios';
@@ -1151,6 +1228,7 @@
     }
   }
 
+  renderSponsors('tenis');
   loadAllData();
   if (location.hash === '#sobre') switchSection('sobre');
   if (AUTO_REFRESH_MINUTES > 0) {
