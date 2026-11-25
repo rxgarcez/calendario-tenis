@@ -881,36 +881,43 @@
 <script>
   /* ===== CONFIG ===== */
   // Single sheet URL — all sports come from one spreadsheet
-  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR0qb_2USYFimuX_1vvu1BIiRhZ3IPlOFDN0dmVxvsixb2lgy40AcbOIYZQLcEs2A5JsGn9SDLudQMh/pub?output=csv';
+  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR0qb_2USYFimuX_1vvu1BIiRhZ3IPlOFDN0dmVxvsixb2lgy40AcbOIYZQLcEs2A5JsGn9SDLudQMh/pub?gid=1451394995&single=true&output=csv';
   const AUTO_REFRESH_MINUTES = 15;
   const CALENDAR_YEAR = 2027;   // ano exibido no calendário
 
-  // Column names in the spreadsheet
+  // Chaves internas das colunas. Os cabeçalhos da planilha são reconhecidos de forma
+  // tolerante (sem diferenciar maiúsculas/acentos) em canonicalHeader().
   const COLS = {
-    dataInicio:  'Data Inicio',
-    dataFim:     'Data Fim',
-    nome:        'Nome do Evento',
-    categoria:   'Categoria',
-    clube:       'Academia/Clube',
-    local:       'Local',
-    ativacao:    'Ativação',
-    link:        'Link Tênis Integrado'
+    dataInicio: 'dataInicio',
+    dataFim:    'dataFim',
+    sigla:      'sigla',        // define em qual aba o evento aparece
+    nome:       'nome',
+    categoria:  'categoria',    // aparece só como etiqueta no card
+    clube:      'clube',
+    local:      'local',
+    ativacao:   'ativacao',
+    link:       'link'
   };
 
-  // Which categories belong to each tab
-  const SPORT_CATS = {
-    beach:  ['beach tennis'],
-    damas:  ['damas'],
-    cursos: ['curso', 'cursos'],
-    tenis:  null   // everything else
-  };
+  // Sigla (coluna C da planilha) -> aba do site
+  //   Tênis        = Abertos, World Tennis, TCR, CBT
+  //   Beach Tennis = Beach Tennis
+  //   Damas        = Damas
+  //   Cursos       = Cursos
+  const TENIS_SIGLAS = ['abertos', 'worldtennis', 'tcr', 'cbt'];
+  const unknownSiglas = new Set();
 
-  function getSport(categoria) {
-    const c = (categoria || '').toLowerCase().trim();
-    if (SPORT_CATS.beach.includes(c))  return 'beach';
-    if (SPORT_CATS.damas.includes(c))  return 'damas';
-    if (SPORT_CATS.cursos.includes(c)) return 'cursos';
-    return 'tenis';
+  function normKey(s) {
+    return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+  }
+
+  function getSport(sigla) {
+    const k = normKey(sigla).replace(/[^a-z0-9]/g, '');   // "World Tennis" e "WorldTennis" viram "worldtennis"
+    if (k.includes('beach')) return 'beach';
+    if (k.includes('dama'))  return 'damas';
+    if (k.includes('curso')) return 'cursos';
+    if (!TENIS_SIGLAS.includes(k)) unknownSiglas.add(sigla || '(vazia)');
+    return 'tenis';   // Abertos, World Tennis, TCR, CBT (e qualquer sigla não reconhecida)
   }
 
   // Hero content per sport
@@ -1013,22 +1020,53 @@
   }
 
   /* ===== CSV PARSER ===== */
+  // Lê o CSV por inteiro (aspas, vírgulas e quebras de linha dentro de células)
+  function parseCSVRows(text) {
+    text = text.replace(/^\uFEFF/, '');
+    const rows = []; let row = [], cur = '', inQ = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (inQ) {
+        if (ch === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else inQ = false; }
+        else cur += ch;
+      } else if (ch === '"') { inQ = true; }
+      else if (ch === ',') { row.push(cur); cur = ''; }
+      else if (ch === '\n' || ch === '\r') {
+        if (ch === '\r' && text[i + 1] === '\n') i++;
+        row.push(cur); cur = ''; rows.push(row); row = [];
+      } else cur += ch;
+    }
+    if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
+    return rows;
+  }
+
+  // "Data Início", "data inicio", "DATA" -> dataInicio ... (os demais cabeçalhos ficam sem uso)
+  function canonicalHeader(h) {
+    const k = normKey(h);
+    if (k.startsWith('data') && k.includes('fim')) return 'dataFim';
+    if (k.startsWith('data') || k === 'inicio') return 'dataInicio';
+    if (k === 'fim') return 'dataFim';
+    if (k === 'sigla') return 'sigla';
+    if (k.startsWith('nome')) return 'nome';
+    if (k === 'categoria') return 'categoria';
+    if (k.includes('academia') || k.includes('clube')) return 'clube';
+    if (k === 'local') return 'local';
+    if (k.startsWith('ativac')) return 'ativacao';
+    if (k.startsWith('link')) return 'link';
+    return null;
+  }
+
   function parseCSV(text) {
-    const lines = text.trim().split('\n');
-    if (lines.length < 2) return [];
-    const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
-    return lines.slice(1).map(line => {
-      const vals = []; let cur = '', inQ = false;
-      for (let i = 0; i < line.length; i++) {
-        if (line[i] === '"') { inQ = !inQ; continue; }
-        if (line[i] === ',' && !inQ) { vals.push(cur.trim()); cur = ''; continue; }
-        cur += line[i];
-      }
-      vals.push(cur.trim());
-      const obj = {};
-      headers.forEach((h, i) => obj[h] = vals[i] || '');
+    const rows = parseCSVRows(text);
+    // cabeçalho = primeira linha que tem "nome do evento" ou "sigla" (ignora títulos acima)
+    let hi = rows.findIndex(r => r.some(cell => { const c = canonicalHeader(cell); return c === 'nome' || c === 'sigla'; }));
+    if (hi < 0) return [];
+    const keys = rows[hi].map(canonicalHeader);
+    return rows.slice(hi + 1).map(r => {
+      const obj = { dataInicio: '', dataFim: '', sigla: '', nome: '', categoria: '', clube: '', local: '', ativacao: '', link: '' };
+      keys.forEach((k, i) => { if (k && !obj[k]) obj[k] = (r[i] || '').trim(); });
       return obj;
-    }).filter(r => r[COLS.nome] && r[COLS.nome].trim());
+    }).filter(r => r.nome);
   }
 
   function parseDate(str) {
@@ -1131,7 +1169,7 @@
       }
       if (s.search) {
         const q = s.search.toLowerCase();
-        if (!Object.values(ev).some(v => v.toLowerCase().includes(q))) return false;
+        if (![ev.nome, ev.clube, ev.local, ev.categoria].some(v => (v || '').toLowerCase().includes(q))) return false;
       }
       return true;
     });
@@ -1213,9 +1251,11 @@
 
       // Distribute rows into sports
       rows.forEach(row => {
-        const sport = getSport(row[COLS.categoria]);
+        const sport = getSport(row[COLS.sigla]);
         state[sport].events.push(row);
       });
+
+      if (unknownSiglas.size) console.warn('Siglas não reconhecidas (enviadas para a aba Tênis):', [...unknownSiglas]);
 
       // Render all
       ['tenis','beach','damas','cursos'].forEach(renderEvents);
